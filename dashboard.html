@@ -1263,7 +1263,7 @@
                     <div class="card progress-card">
                         <div>
                             <div style="display:flex;justify-content:space-between;align-items:center;">
-                                <span class="portfolio-label">Withdrawal Progress</span>
+                                <span class="portfolio-label">Deposit Progress</span>
                                 <i data-lucide="shield-check" style="color:var(--accent-blue);"></i>
                             </div>
                             <div style="font-size:1.25rem;font-weight:600;margin-top:8px;" id="progressTextDisplay">
@@ -1521,8 +1521,8 @@
                         <img src="images/profilepic.jpg" alt="Profile Picture" class="profile-avatar"
                             id="profileAvatarInitial">
                         <div class="profile-hero-info">
-                            <h2 id="profileDisplayName">Alex Morgan</h2>
-                            <p id="profileEmailDisplay">alex.morgan@cryptovault.io</p>
+                            <h2 id="profileDisplayName">RIDA</h2>
+                            <p id="profileEmailDisplay">r7million1624@gmail.com</p>
                             <div class="profile-badges">
                                 <span class="badge badge-green">✓ Verified Trader</span>
                                 <span class="badge badge-blue">⚡ 10x Multiplier</span>
@@ -1593,24 +1593,24 @@
                         </h3>
                         <div class="profile-info-row">
                             <span class="profile-info-label"><i data-lucide="user" size="14"></i> Full Name</span>
-                            <span class="profile-info-value" id="pi-name">Alex Morgan</span>
+                            <span class="profile-info-value" id="pi-name">RIDA</span>
                         </div>
                         <div class="profile-info-row">
                             <span class="profile-info-label"><i data-lucide="mail" size="14"></i> Email</span>
-                            <span class="profile-info-value" id="pi-email">alex.morgan@cryptovault.io</span>
+                            <span class="profile-info-value" id="pi-email">r7million1624@gmail.com</span>
                         </div>
                         <div class="profile-info-row">
                             <span class="profile-info-label"><i data-lucide="phone" size="14"></i> Phone</span>
-                            <span class="profile-info-value">+1 (555) 012-3456</span>
+                            <span class="profile-info-value">+1 (***) *** **14</span>
                         </div>
                         <div class="profile-info-row">
                             <span class="profile-info-label"><i data-lucide="globe" size="14"></i> Country</span>
-                            <span class="profile-info-value">United States 🇺🇸</span>
+                            <span class="profile-info-value">United States US</span>
                         </div>
                         <div class="profile-info-row">
                             <span class="profile-info-label"><i data-lucide="calendar" size="14"></i> Member
                                 Since</span>
-                            <span class="profile-info-value">January 2024</span>
+                            <span class="profile-info-value">August 2026</span>
                         </div>
                         <div class="profile-info-row">
                             <span class="profile-info-label"><i data-lucide="dollar-sign" size="14"></i> Base
@@ -1647,7 +1647,7 @@
                                 <div>
                                     <div style="font-size:0.9rem;font-weight:600;">Bitcoin (BTC)</div>
                                     <div style="font-size:0.72rem;color:var(--text-secondary);font-family:monospace;">
-                                        bc1qxy2k…x0wlh</div>
+                                        bc1qhlh...x5uulf</div>
                                 </div>
                             </div>
                             <span class="badge badge-green">Primary</span>
@@ -1673,7 +1673,7 @@
                     </div>
 
                     <!-- Recent Activity -->
-                    <div class="card">
+                    <!-- <div class="card">
                         <h3
                             style="font-size:1rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
                             <i data-lucide="activity" size="16"></i> Recent Activity
@@ -1723,7 +1723,7 @@
                             <div style="font-size:0.75rem;color:var(--text-secondary);">1w ago</div>
                         </div> -->
                     </div>
-                </div>
+                </div> -->
 
                 <!-- Preferences -->
                 <div class="card" style="margin-bottom:24px;">
@@ -1837,7 +1837,7 @@
                 <div
                     style="background-color:var(--bg-input);border:1px dashed var(--border-color);padding:12px 16px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:space-between;gap:12px;">
                     <span id="walletAddress"
-                        style="font-family:monospace;font-size:0.9rem;color:var(--text-primary);word-break:break-all;">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</span>
+                        style="font-family:monospace;font-size:0.9rem;color:var(--text-primary);word-break:break-all;">bc1qhlhgnclqgr67gf6hyrzd8dskyce7mj4xx5uulf</span>
                     <button class="btn btn-secondary" onclick="copyWalletAddress()"
                         style="padding:6px 12px;font-size:0.8rem;flex-shrink:0;"><i data-lucide="copy" size="14"></i>
                         Copy</button>
@@ -1875,9 +1875,9 @@
     <script>
         // ── App Deposits Config ──
         const myDeposits = [
-            { amount: 1000, date: "8/18/2026, 10:30:00 AM" },
-            { amount: 200, date: "8/18/2026, 01:15:00 PM" },
-            { amount: 800, date: "8/19/2026, 11:00:00 AM" }
+            // { amount: 1000, date: "8/18/2026, 10:30:00 AM" },
+            // { amount: 200, date: "8/18/2026, 01:15:00 PM" },
+            // { amount: 800, date: "8/19/2026, 11:00:00 AM" }
         ];
         const TARGET_WITHDRAWAL_DEPOSIT = 5000.00;
         const BASE_BALANCE = 10000.00;
@@ -1990,7 +1990,7 @@
 
         // ── Profile Page Population ──
         function populateProfilePage() {
-            const email = (state.user && state.user.email) ? state.user.email : 'alex.morgan@cryptovault.io';
+            const email = (state.user && state.user.email) ? state.user.email : 'r7milliron1624@gmail.com';
             const name = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
             const initial = name.charAt(0).toUpperCase();
 
