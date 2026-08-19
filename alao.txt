@@ -1,0 +1,4 @@
+            <a href="./interface.html" class="btn-primary" id="signin-submit">
+                <span class="btn-label">Enter Terminal</span>
+                <span class="btn-spinner" aria-hidden="true"></span>
+            </a>
