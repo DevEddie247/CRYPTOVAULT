@@ -146,8 +146,6 @@
             width: calc(100% - var(--sidebar-width));
         }
 
-
-
         /* --- Components --- */
         .btn {
             display: inline-flex;
@@ -446,6 +444,16 @@
             margin-bottom: 24px;
         }
 
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -623,7 +631,6 @@
 </head>
 <body>
 
-
     <div class="app-container">
         <!-- Header -->
         <header class="header">
@@ -643,7 +650,6 @@
                 </button>
                 <div id="userProfileNav" style="display: flex; align-items: center; gap: 12px;">
                     <span id="userEmailDisplay" style="font-size: 0.875rem; color: var(--text-secondary);"></span>
-    
                 </div>
             </div>
         </header>
@@ -853,7 +859,7 @@
         <div class="modal">
             <div class="modal-header">
                 <h3 style="font-size: 1.25rem;">Deposit Bitcoin</h3>
-                <button class="mobile-menu-btn" onclick="closeModal('depositModal')"><i data-lucide="x"></i></button>
+                <button class="modal-close-btn" onclick="closeModal('depositModal')"><i data-lucide="x"></i></button>
             </div>
             
             <!-- 10x Multiplier Notice -->
@@ -892,7 +898,7 @@
                     <i data-lucide="bot" style="color: var(--accent-blue);"></i>
                     <span style="font-weight: 600; font-size: 0.9rem;">CryptoVault Support</span>
                 </div>
-                <button class="mobile-menu-btn" id="chatCloseBtn"><i data-lucide="x"></i></button>
+                <button class="modal-close-btn" id="chatCloseBtn"><i data-lucide="x"></i></button>
             </div>
             <div class="chat-messages" id="chatMessages">
                 <div class="chat-bubble bot">
@@ -942,8 +948,7 @@
             rawDeposits: calculatedRawDeposits,
             totalBalance: BASE_BALANCE + totalCreditedBonus,
             transactions: formattedTransactions,
-            theme: localStorage.getItem('cv_theme') || 'dark',
-            pageAuthMode: 'signin'
+            theme: localStorage.getItem('cv_theme') || 'dark'
         };
 
         // --- DOM Selectors ---
@@ -1032,17 +1037,6 @@
             alert("Deposit process started! Once the blockchain confirms your transfer, the admin will update your balance.");
         }
 
-        // --- Storage Helpers ---
-        function saveState() {
-            localStorage.setItem('cv_rawDeposits', state.rawDeposits);
-            localStorage.setItem('cv_totalBalance', state.totalBalance);
-            localStorage.setItem('cv_transactions', JSON.stringify(state.transactions));
-            if (state.user) localStorage.setItem('cv_user', JSON.stringify(state.user));
-            else localStorage.removeItem('cv_user');
-        }
-
-
-
         // --- Real-Time Crypto Community Chat Logic ---
         const communityMessagesEl = document.getElementById('communityChatMessages');
         const communityChatForm = document.getElementById('communityChatForm');
@@ -1056,7 +1050,6 @@
 
         function initCommunityChat() {
             renderCommunityMessages();
-            // Simulate incoming random global trader messages periodically
             setInterval(() => {
                 const randomUsers = ["TraderJoe", "BitQueen", "AlphaNode", "CryptoBull21"];
                 const randomComments = [
@@ -1090,7 +1083,7 @@
             const text = communityChatInput.value.trim();
             if (!text) return;
 
-            const currentUserTag = state.user ? state.user.email.split('@')[0] : "GuestTrader";
+            const currentUserTag = (state.user && state.user.email) ? state.user.email.split('@')[0] : "GuestTrader";
             initialCommunityMessages.push({ user: currentUserTag, text: text, time: "Just now" });
             renderCommunityMessages();
             communityChatInput.value = '';
@@ -1140,6 +1133,8 @@
             const points = [120, 115, 125, 110, 130, 105, 140, 135, 145];
             const svgPath = document.getElementById('chartPath');
             const svgArea = document.getElementById('chartArea');
+
+            if (!svgPath || !svgArea) return;
 
             let pathD = `M 0 ${points[0]}`;
             const step = 500 / (points.length - 1);
@@ -1221,5 +1216,5 @@
             });
         }
     </script>
-</body>f
+</body>
 </html>

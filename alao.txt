@@ -1,4 +1,1220 @@
-            <a href="./interface.html" class="btn-primary" id="signin-submit">
-                <span class="btn-label">Enter Terminal</span>
-                <span class="btn-spinner" aria-hidden="true"></span>
-            </a>
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoVault | Modern Crypto Trading Platform</title>
+    <!-- Inter Font & Lucide Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            /* Coinbase-inspired Dark Theme Variables */
+            --bg-main: #0A0E17;
+            --bg-card: #141C2E;
+            --bg-card-hover: #1A243B;
+            --bg-input: #0F1623;
+            --border-color: #232E48;
+            --text-primary: #FFFFFF;
+            --text-secondary: #8A99AD;
+            --accent-blue: #0052FF;
+            --accent-blue-hover: #0045D8;
+            --accent-green: #00C853;
+            --accent-green-bg: rgba(0, 200, 83, 0.12);
+            --accent-red: #FF3B30;
+            --accent-red-bg: rgba(255, 59, 48, 0.12);
+            --sidebar-width: 240px;
+            --header-height: 70px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --shadow-main: 0 8px 24px rgba(0, 0, 0, 0.3);
+            --transition: all 0.25s ease;
+        }
+
+        [data-theme="light"] {
+            --bg-main: #F4F6F8;
+            --bg-card: #FFFFFF;
+            --bg-card-hover: #F0F3F7;
+            --bg-input: #F8FAFC;
+            --border-color: #E2E8F0;
+            --text-primary: #0A0E17;
+            --text-secondary: #5B6B7C;
+            --shadow-main: 0 8px 24px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* --- Layout & Grid Structure --- */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Sticky Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Desktop Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-card);
+            border-right: 1px solid var(--border-color);
+            padding: 90px 16px 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 90;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            font-weight: 500;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: var(--accent-blue);
+            background-color: rgba(0, 82, 255, 0.08);
+        }
+
+        /* Main Content Container */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 32px;
+            max-width: 1400px;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        /* --- Components --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-primary {
+            background-color: var(--accent-blue);
+            color: #FFFFFF;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-blue-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--bg-card-hover);
+        }
+
+        .btn-disabled {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-main);
+        }
+
+        /* Dashboard Overview */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .portfolio-header {
+            margin-bottom: 24px;
+        }
+
+        .portfolio-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+
+        .portfolio-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .action-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        /* Withdrawal Progress Bar */
+        .progress-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            height: 10px;
+            background-color: var(--bg-input);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 16px 0 8px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Lock Icon Tooltip */
+        .tooltip-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            width: 200px;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            border-radius: var(--radius-sm);
+            padding: 8px;
+            position: absolute;
+            z-index: 10;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.75rem;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .tooltip-wrapper:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Asset Table & Chart Grid */
+        .trading-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-container {
+            height: 300px;
+            width: 100%;
+            position: relative;
+        }
+
+        svg.chart-line {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        .asset-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .asset-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background-color: var(--bg-input);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .asset-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-green {
+            background-color: var(--accent-green-bg);
+            color: var(--accent-green);
+        }
+
+        .badge-red {
+            background-color: var(--accent-red-bg);
+            color: var(--accent-red);
+        }
+
+        /* Real-Time Community Chat Widget Panel */
+        .community-chat-card {
+            display: flex;
+            flex-direction: column;
+            height: 360px;
+        }
+
+        .community-chat-messages {
+            flex: 1;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .community-msg {
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .community-msg .user-tag {
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-right: 6px;
+        }
+
+        .community-msg .timestamp {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-left: 6px;
+        }
+
+        /* History Table */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        th {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* --- Modals Overlay --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 440px;
+            padding: 32px;
+            box-shadow: var(--shadow-main);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-blue);
+        }
+
+        /* --- Live Customer Support Chat --- */
+        .chat-widget {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 150;
+        }
+
+        .chat-toggle {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--accent-blue);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(0, 82, 255, 0.4);
+            border: none;
+            transition: transform 0.2s ease;
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.05);
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 360px;
+            height: 480px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-main);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .chat-window.active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        .chat-header {
+            background-color: var(--bg-input);
+            padding: 16px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-bubble {
+            max-width: 80%;
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            line-height: 1.4;
+        }
+
+        .chat-bubble.bot {
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            align-self: flex-start;
+            border: 1px solid var(--border-color);
+        }
+
+        .chat-bubble.user {
+            background-color: var(--accent-blue);
+            color: #FFFFFF;
+            align-self: flex-end;
+        }
+
+        .chat-input-area {
+            padding: 12px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 8px 12px;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        /* --- Responsive Styles --- */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-grid, .trading-grid {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                transform: translateX(-100%);
+                top: var(--header-height);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 16px;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .action-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .chat-window {
+                width: calc(100vw - 32px);
+                right: -8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i data-lucide="menu"></i>
+                </button>
+                <a href="#" class="brand">
+                    <i data-lucide="vault"></i>
+                    CryptoVault
+                </a>
+            </div>
+            
+            <div class="header-actions">
+                <button class="btn btn-secondary" id="themeToggleBtn" title="Toggle Theme">
+                    <i data-lucide="moon" id="themeIcon"></i>
+                </button>
+                <div id="userProfileNav" style="display: flex; align-items: center; gap: 12px;">
+                    <span id="userEmailDisplay" style="font-size: 0.875rem; color: var(--text-secondary);"></span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <a href="#" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+            <a href="#" class="nav-item"><i data-lucide="line-chart"></i> Trade</a>
+            <a href="#" class="nav-item"><i data-lucide="wallet"></i> Assets</a>
+            <a href="#" class="nav-item"><i data-lucide="history"></i> History</a>
+            <a href="#settingsSection" class="nav-item"><i data-lucide="settings"></i> Settings</a>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            
+            <!-- Dashboard Top Grid -->
+            <section class="dashboard-grid">
+                <!-- Balance & Actions Card -->
+                <div class="card">
+                    <div class="portfolio-header">
+                        <div class="portfolio-label">Total Portfolio Balance</div>
+                        <div class="portfolio-value" id="portfolioBalanceDisplay">$10,000.00</div>
+                    </div>
+                    
+                    <!-- Primary Coinbase Action Bar -->
+                    <div class="action-bar">
+                        <button class="btn btn-primary" onclick="openDepositModal()">
+                            <i data-lucide="arrow-down-left"></i> Deposit
+                        </button>
+                        
+                        <div class="tooltip-wrapper">
+                            <button class="btn btn-secondary btn-disabled" id="withdrawBtn" disabled>
+                                <i data-lucide="lock" id="withdrawIcon"></i> Withdraw
+                            </button>
+                            <span class="tooltip-text" id="withdrawTooltip">Deposit $5,000 target to unlock withdrawals.</span>
+                        </div>
+                        
+                        <button class="btn btn-secondary" onclick="alert('Buy/Sell interface active.')">
+                            <i data-lucide="arrow-left-right"></i> Buy/Sell
+                        </button>
+                        <button class="btn btn-secondary" onclick="alert('Transfer mechanism active.')">
+                            <i data-lucide="send"></i> Transfer
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Withdrawal Progress Widget -->
+                <div class="card progress-card">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <span class="portfolio-label">Withdrawal Progress</span>
+                            <i data-lucide="shield-check" style="color: var(--accent-blue);"></i>
+                        </div>
+                        <div style="font-size: 1.25rem; font-weight: 600; margin-top: 8px;" id="progressTextDisplay">
+                            $0.00 / $5,000.00
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill" id="progressBarFill"></div>
+                        </div>
+                        <p style="font-size: 0.75rem; color: var(--text-secondary);" id="progressStatusText">
+                            Deposit $5,000 cumulatively to activate instant withdrawals.
+                        </p>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--accent-green); display: flex; align-items: center; gap: 4px; margin-top: 12px;">
+                        <i data-lucide="zap" size="14"></i> 10x Deposit Multiplier Active
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trading Overview & Real-Time Crypto Community Chat Grid -->
+            <section class="trading-grid">
+                <!-- SVG Real-Time Price Chart Container -->
+                <div class="card">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <div>
+                            <h3 style="font-size: 1.1rem; font-weight: 600;">BTC/USD Market View</h3>
+                            <span style="font-size: 0.8rem; color: var(--accent-green);" id="chartLivePrice">$64,230.50 (+2.4%)</span>
+                        </div>
+                        <i data-lucide="trending-up" style="color: var(--accent-green);"></i>
+                    </div>
+                    <div class="chart-container">
+                        <svg class="chart-line" viewBox="0 0 500 150" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="#0052FF" stop-opacity="0.4"/>
+                                    <stop offset="100%" stop-color="#0052FF" stop-opacity="0"/>
+                                </linearGradient>
+                            </defs>
+                            <path id="chartArea" d="" fill="url(#chartGradient)"/>
+                            <path id="chartPath" d="" fill="none" stroke="#0052FF" stroke-width="3"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Real-Time Crypto Community Chat -->
+                <div class="card community-chat-card">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i data-lucide="globe" size="16" style="color: var(--accent-blue);"></i>
+                            <h3 style="font-size: 1rem; font-weight: 600;">Live Crypto Chat</h3>
+                        </div>
+                        <span class="badge badge-green" style="font-size: 0.65rem;">● Live Feed</span>
+                    </div>
+                    <div class="community-chat-messages" id="communityChatMessages">
+                        <!-- Injected live feed messages -->
+                    </div>
+                    <form id="communityChatForm" style="display: flex; gap: 8px;">
+                        <input type="text" id="communityChatInput" placeholder="Broadcast to traders..." autocomplete="off" style="flex: 1; padding: 8px 12px; background-color: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.85rem; outline: none;">
+                        <button type="submit" class="btn btn-primary" style="padding: 8px 12px;"><i data-lucide="send" size="14"></i></button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Asset Watchlist -->
+            <section class="card" style="margin-bottom: 32px;">
+                <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px;">Live Assets</h3>
+                <div class="asset-list">
+                    <div class="asset-item">
+                        <div class="asset-info">
+                            <i data-lucide="bitcoin" style="color: #F7931A;"></i>
+                            <div>
+                                <div style="font-weight: 600;">Bitcoin</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">BTC</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 600;" id="btcPrice">$64,230.50</div>
+                            <span class="badge badge-green" id="btcChange">+2.4%</span>
+                        </div>
+                    </div>
+
+                    <div class="asset-item">
+                        <div class="asset-info">
+                            <i data-lucide="coins" style="color: #627EEA;"></i>
+                            <div>
+                                <div style="font-weight: 600;">Ethereum</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">ETH</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 600;" id="ethPrice">$3,450.20</div>
+                            <span class="badge badge-green" id="ethChange">+1.8%</span>
+                        </div>
+                    </div>
+
+                    <div class="asset-item">
+                        <div class="asset-info">
+                            <i data-lucide="sun" style="color: #14F195;"></i>
+                            <div>
+                                <div style="font-weight: 600;">Solana</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">SOL</div>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-weight: 600;" id="solPrice">$145.80</div>
+                            <span class="badge badge-red" id="solChange">-0.5%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Transaction Ledger -->
+            <section class="card" style="margin-bottom: 32px;">
+                <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px;">Transaction History Ledger</h3>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Amount Deposited</th>
+                                <th>10x Credit Added</th>
+                                <th>Timestamp</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionLedgerBody">
+                            <!-- Injected dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Settings Section -->
+            <section class="card" id="settingsSection">
+                <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px;">User Profile & Settings</h3>
+                <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
+                    <div>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Account Status</p>
+                        <p style="font-weight: 600; color: var(--accent-green);">Verified Trader</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Base Currency</p>
+                        <p style="font-weight: 600;">USD ($)</p>
+                    </div>
+                    <div>
+                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Security</p>
+                        <p style="font-weight: 600;">2FA Active</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Deposit Info Modal -->
+    <div class="modal-overlay" id="depositModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 style="font-size: 1.25rem;">Deposit Bitcoin</h3>
+                <button class="modal-close-btn" onclick="closeModal('depositModal')"><i data-lucide="x"></i></button>
+            </div>
+            
+            <!-- 10x Multiplier Notice -->
+            <div style="background-color: var(--accent-green-bg); color: var(--accent-green); padding: 12px; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 20px;">
+                <i data-lucide="sparkles" size="16"></i> <strong>10x Multiplier Rule Active:</strong> Any BTC amount sent to this network address will automatically be multiplied by 10 and credited to your dashboard balance.
+            </div>
+            
+            <!-- Wallet Address Display -->
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Network: Bitcoin (BTC)</label>
+                <div style="background-color: var(--bg-input); border: 1px dashed var(--border-color); padding: 12px 16px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between; gap: 12px;">
+                    <span id="walletAddress" style="font-family: monospace; font-size: 0.9rem; color: var(--text-primary); word-break: break-all;">
+                        bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
+                    </span>
+                    <button class="btn btn-secondary" onclick="copyWalletAddress()" style="padding: 6px 12px; font-size: 0.8rem; flex-shrink: 0;">
+                        <i data-lucide="copy" size="14"></i> Copy
+                    </button>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <button type="button" class="btn btn-primary" style="width: 100%;" onclick="confirmDepositAction()">
+                Deposit Now
+            </button>
+        </div>
+    </div>
+
+    <!-- Customer Support Floating Chat Widget -->
+    <div class="chat-widget">
+        <button class="chat-toggle" id="chatToggleBtn">
+            <i data-lucide="message-square"></i>
+        </button>
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <i data-lucide="bot" style="color: var(--accent-blue);"></i>
+                    <span style="font-weight: 600; font-size: 0.9rem;">CryptoVault Support</span>
+                </div>
+                <button class="modal-close-btn" id="chatCloseBtn"><i data-lucide="x"></i></button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-bubble bot">
+                    Hello! Welcome to CryptoVault. How can I assist you with your portfolio or deposits today?
+                </div>
+            </div>
+            <form class="chat-input-area" id="chatForm">
+                <input type="text" id="chatInput" placeholder="Type a message..." autocomplete="off">
+                <button type="submit" class="btn btn-primary" style="padding: 8px 12px;"><i data-lucide="send" size="16"></i></button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Core Application Logic -->
+    <script>
+        // --- 1. EDIT YOUR DEPOSITS HERE ---
+        const myDeposits = [
+            { amount: 1000, date: "8/18/2026, 10:30:00 AM" },
+            { amount: 200, date: "8/18/2026, 01:15:00 PM" }
+        ];
+        // ----------------------------------
+
+        const TARGET_WITHDRAWAL_DEPOSIT = 5000.00;
+        const BASE_BALANCE = 10000.00;
+
+        // --- 2. AUTOMATIC CALCULATION ENGINE ---
+        let calculatedRawDeposits = 0;
+        let totalCreditedBonus = 0;
+        let formattedTransactions = [];
+
+        myDeposits.forEach((dep, index) => {
+            let creditedAmt = dep.amount * 10;
+            calculatedRawDeposits += dep.amount;
+            totalCreditedBonus += creditedAmt;
+            
+            formattedTransactions.push({
+                id: index,
+                rawAmount: dep.amount,
+                creditedAmount: creditedAmt,
+                timestamp: dep.date
+            });
+        });
+
+        // --- 3. STATE MANAGEMENT ---
+        let state = {
+            user: JSON.parse(localStorage.getItem('cv_user')) || null,
+            rawDeposits: calculatedRawDeposits,
+            totalBalance: BASE_BALANCE + totalCreditedBonus,
+            transactions: formattedTransactions,
+            theme: localStorage.getItem('cv_theme') || 'dark'
+        };
+
+        // --- DOM Selectors ---
+        const portfolioBalanceDisplay = document.getElementById('portfolioBalanceDisplay');
+        const progressTextDisplay = document.getElementById('progressTextDisplay');
+        const progressBarFill = document.getElementById('progressBarFill');
+        const withdrawBtn = document.getElementById('withdrawBtn');
+        const withdrawIcon = document.getElementById('withdrawIcon');
+        const withdrawTooltip = document.getElementById('withdrawTooltip');
+        const transactionLedgerBody = document.getElementById('transactionLedgerBody');
+        const themeToggleBtn = document.getElementById('themeToggleBtn');
+        const themeIcon = document.getElementById('themeIcon');
+
+        // --- Initialize Application ---
+        document.addEventListener('DOMContentLoaded', () => {
+            initLucide();
+            applyTheme(state.theme);
+            updateUI();
+            initChart();
+            initLivePrices();
+            setupEventListeners();
+            initCommunityChat();
+        });
+
+        function initLucide() {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        }
+
+        // --- UI Update Pipeline ---
+        function updateUI() {
+            portfolioBalanceDisplay.textContent = formatCurrency(state.totalBalance);
+            progressTextDisplay.textContent = `${formatCurrency(state.rawDeposits)} / ${formatCurrency(TARGET_WITHDRAWAL_DEPOSIT)}`;
+            const progressPercent = Math.min((state.rawDeposits / TARGET_WITHDRAWAL_DEPOSIT) * 100, 100);
+            progressBarFill.style.width = `${progressPercent}%`;
+
+            if (state.rawDeposits >= TARGET_WITHDRAWAL_DEPOSIT) {
+                withdrawBtn.classList.remove('btn-disabled');
+                withdrawBtn.removeAttribute('disabled');
+                withdrawIcon.setAttribute('data-lucide', 'arrow-up-right');
+                withdrawTooltip.textContent = "Withdrawals unlocked!";
+            } else {
+                withdrawBtn.classList.add('btn-disabled');
+                withdrawBtn.setAttribute('disabled', 'true');
+                withdrawIcon.setAttribute('data-lucide', 'lock');
+                withdrawTooltip.textContent = `Deposit ${formatCurrency(TARGET_WITHDRAWAL_DEPOSIT - state.rawDeposits)} more to unlock.`;
+            }
+
+            renderLedger();
+            initLucide();
+        }
+
+        function renderLedger() {
+            transactionLedgerBody.innerHTML = '';
+            if (state.transactions.length === 0) {
+                transactionLedgerBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-secondary);">No deposit transactions found</td></tr>`;
+                return;
+            }
+
+            state.transactions.slice().reverse().forEach(tx => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="font-weight: 600;"><span style="color: var(--accent-green);">Deposit</span></td>
+                    <td>${formatCurrency(tx.rawAmount)}</td>
+                    <td style="color: var(--accent-green); font-weight: 600;">+${formatCurrency(tx.creditedAmount)}</td>
+                    <td style="color: var(--text-secondary);">${tx.timestamp}</td>
+                    <td><span class="badge badge-green">Completed</span></td>
+                `;
+                transactionLedgerBody.appendChild(tr);
+            });
+        }
+
+        // --- Wallet & Deposit Actions ---
+        function copyWalletAddress() {
+            const walletText = document.getElementById('walletAddress').innerText.trim();
+            navigator.clipboard.writeText(walletText).then(() => {
+                alert("Wallet address copied to clipboard!");
+            }).catch(err => {
+                console.error("Failed to copy text: ", err);
+            });
+        }
+
+        function confirmDepositAction() {
+            closeModal('depositModal');
+            alert("Deposit process started! Once the blockchain confirms your transfer, the admin will update your balance.");
+        }
+
+        // --- Real-Time Crypto Community Chat Logic ---
+        const communityMessagesEl = document.getElementById('communityChatMessages');
+        const communityChatForm = document.getElementById('communityChatForm');
+        const communityChatInput = document.getElementById('communityChatInput');
+
+        const initialCommunityMessages = [
+            { user: "CryptoWhale99", text: "BTC looking extremely bullish toward 70k today!", time: "Just now" },
+            { user: "SatoshiFan", text: "Did anyone check out the 10x deposit bonus rule? Pretty solid promo.", time: "1m ago" },
+            { user: "Elena_Trades", text: "Holding my SOL bags tight 🚀", time: "3m ago" }
+        ];
+
+        function initCommunityChat() {
+            renderCommunityMessages();
+            setInterval(() => {
+                const randomUsers = ["TraderJoe", "BitQueen", "AlphaNode", "CryptoBull21"];
+                const randomComments = [
+                    "Just stacked more ETH on the dip!",
+                    "Anyone trading leverage here?",
+                    "The UI on CryptoVault is super clean 🔥",
+                    "Support chat helped me instantly with my transfer."
+                ];
+                const user = randomUsers[Math.floor(Math.random() * randomUsers.length)];
+                const text = randomComments[Math.floor(Math.random() * randomComments.length)];
+                
+                initialCommunityMessages.push({ user, text, time: "Just now" });
+                if (initialCommunityMessages.length > 25) initialCommunityMessages.shift();
+                renderCommunityMessages();
+            }, 6000);
+        }
+
+        function renderCommunityMessages() {
+            communityMessagesEl.innerHTML = '';
+            initialCommunityMessages.forEach(msg => {
+                const div = document.createElement('div');
+                div.classList.add('community-msg');
+                div.innerHTML = `<span class="user-tag">@${msg.user}:</span><span style="color: var(--text-primary);">${msg.text}</span><span class="timestamp">${msg.time}</span>`;
+                communityMessagesEl.appendChild(div);
+            });
+            communityMessagesEl.scrollTop = communityMessagesEl.scrollHeight;
+        }
+
+        communityChatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = communityChatInput.value.trim();
+            if (!text) return;
+
+            const currentUserTag = (state.user && state.user.email) ? state.user.email.split('@')[0] : "GuestTrader";
+            initialCommunityMessages.push({ user: currentUserTag, text: text, time: "Just now" });
+            renderCommunityMessages();
+            communityChatInput.value = '';
+        });
+
+        // --- Live Customer Support Chat Logic ---
+        const chatToggleBtn = document.getElementById('chatToggleBtn');
+        const chatCloseBtn = document.getElementById('chatCloseBtn');
+        const chatWindow = document.getElementById('chatWindow');
+        const chatForm = document.getElementById('chatForm');
+        const chatInput = document.getElementById('chatInput');
+        const chatMessages = document.getElementById('chatMessages');
+
+        chatToggleBtn.addEventListener('click', () => chatWindow.classList.toggle('active'));
+        chatCloseBtn.addEventListener('click', () => chatWindow.classList.remove('active'));
+
+        chatForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            appendSupportMessage(text, 'user');
+            chatInput.value = '';
+
+            setTimeout(() => {
+                let botReply = "Thank you for contacting CryptoVault Support. An agent will review your inquiry shortly.";
+                const lower = text.toLowerCase();
+                if (lower.includes('deposit') || lower.includes('bonus') || lower.includes('10x')) {
+                    botReply = "All deposits automatically receive a 10x balance credit. For instance, a $100 deposit adds $1,000 instantly to your balance.";
+                } else if (lower.includes('withdraw')) {
+                    botReply = `Withdrawals are locked until you reach a total of $5,000 in raw deposits. Your current deposit total is $${state.rawDeposits.toFixed(2)}.`;
+                }
+                appendSupportMessage(botReply, 'bot');
+            }, 1000);
+        });
+
+        function appendSupportMessage(message, sender) {
+            const div = document.createElement('div');
+            div.classList.add('chat-bubble', sender);
+            div.textContent = message;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // --- Simulated Charting Engine ---
+        function initChart() {
+            const points = [120, 115, 125, 110, 130, 105, 140, 135, 145];
+            const svgPath = document.getElementById('chartPath');
+            const svgArea = document.getElementById('chartArea');
+
+            if (!svgPath || !svgArea) return;
+
+            let pathD = `M 0 ${points[0]}`;
+            const step = 500 / (points.length - 1);
+
+            points.forEach((pt, i) => {
+                if (i !== 0) pathD += ` L ${i * step} ${pt}`;
+            });
+
+            svgPath.setAttribute('d', pathD);
+            svgArea.setAttribute('d', `${pathD} L 500 150 L 0 150 Z`);
+        }
+
+        // --- Live Ticker Price Simulation ---
+        function initLivePrices() {
+            setInterval(() => {
+                updateTicker('btcPrice', 'btcChange', 64230.50);
+                updateTicker('ethPrice', 'ethChange', 3450.20);
+                updateTicker('solPrice', 'solChange', 145.80);
+            }, 3000);
+        }
+
+        function updateTicker(priceId, changeId, basePrice) {
+            const deltaPercent = (Math.random() * 0.8 - 0.4);
+            const newPrice = basePrice * (1 + deltaPercent / 100);
+            const priceEl = document.getElementById(priceId);
+            const changeEl = document.getElementById(changeId);
+
+            if (priceEl && changeEl) {
+                priceEl.textContent = formatCurrency(newPrice);
+                const isPos = deltaPercent >= 0;
+                changeEl.textContent = `${isPos ? '+' : ''}${deltaPercent.toFixed(2)}%`;
+                changeEl.className = `badge ${isPos ? 'badge-green' : 'badge-red'}`;
+            }
+        }
+
+        // --- Theme Engine ---
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            themeIcon.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
+            initLucide();
+        }
+
+        themeToggleBtn.addEventListener('click', () => {
+            state.theme = state.theme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('cv_theme', state.theme);
+            applyTheme(state.theme);
+        });
+
+        // --- Mobile Drawer Controls ---
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // --- General Helper Utility Functions ---
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+        }
+
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function openDepositModal() {
+            openModal('depositModal');
+        }
+
+        function setupEventListeners() {
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) closeModal(overlay.id);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
