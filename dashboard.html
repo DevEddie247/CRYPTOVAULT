@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CryptoVault | Modern Crypto Trading Platform</title>
+    <meta name="description"
+        content="CryptoVault – Trade Bitcoin, Ethereum and Solana with live market charts, real-time prices, and a 10x deposit multiplier.">
     <!-- Inter Font & Lucide Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap"
+        rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            /* Coinbase-inspired Dark Theme Variables */
             --bg-main: #0A0E17;
             --bg-card: #141C2E;
             --bg-card-hover: #1A243B;
@@ -25,6 +29,8 @@
             --accent-green-bg: rgba(0, 200, 83, 0.12);
             --accent-red: #FF3B30;
             --accent-red-bg: rgba(255, 59, 48, 0.12);
+            --accent-gold: #F7931A;
+            --accent-violet: #7C3AED;
             --sidebar-width: 240px;
             --header-height: 70px;
             --radius-sm: 8px;
@@ -32,6 +38,8 @@
             --radius-lg: 16px;
             --shadow-main: 0 8px 24px rgba(0, 0, 0, 0.3);
             --transition: all 0.25s ease;
+            --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+            --gradient-text: linear-gradient(90deg, #00F2FE 0%, #0052FF 45%, #E100FF 100%);
         }
 
         [data-theme="light"] {
@@ -62,14 +70,13 @@
             overflow-x: hidden;
         }
 
-        /* --- Layout & Grid Structure --- */
         .app-container {
             display: flex;
             min-height: 100vh;
             width: 100%;
         }
 
-        /* Sticky Header */
+        /* ── Header ── */
         .header {
             position: fixed;
             top: 0;
@@ -85,14 +92,23 @@
             z-index: 100;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .br-mark {
+            display: inline-flex;
+            filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
+        }
+
+        .br-name {
+            font-family: var(--font-display);
             font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--accent-blue);
-            text-decoration: none;
+            font-size: 1.15rem;
+            letter-spacing: 0.06em;
+        }
+
+        .br-accent {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .header-actions {
@@ -101,7 +117,7 @@
             gap: 16px;
         }
 
-        /* Desktop Sidebar */
+        /* ── Sidebar ── */
         .sidebar {
             width: var(--sidebar-width);
             background-color: var(--bg-card);
@@ -109,13 +125,14 @@
             padding: 90px 16px 24px 16px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 4px;
             position: fixed;
             top: 0;
             bottom: 0;
             left: 0;
             z-index: 90;
             transition: transform 0.3s ease;
+            overflow-y: auto;
         }
 
         .nav-item {
@@ -129,14 +146,26 @@
             font-weight: 500;
             transition: var(--transition);
             cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-size: 0.95rem;
         }
 
-        .nav-item:hover, .nav-item.active {
+        .nav-item:hover,
+        .nav-item.active {
             color: var(--accent-blue);
             background-color: rgba(0, 82, 255, 0.08);
         }
 
-        /* Main Content Container */
+        .nav-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 8px 0;
+        }
+
+        /* ── Page Sections ── */
         .main-content {
             flex: 1;
             margin-left: var(--sidebar-width);
@@ -146,7 +175,15 @@
             width: calc(100% - var(--sidebar-width));
         }
 
-        /* --- Components --- */
+        .page-section {
+            display: none;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        /* ── Buttons & Cards ── */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -163,7 +200,7 @@
 
         .btn-primary {
             background-color: var(--accent-blue);
-            color: #FFFFFF;
+            color: #FFF;
         }
 
         .btn-primary:hover {
@@ -193,7 +230,7 @@
             box-shadow: var(--shadow-main);
         }
 
-        /* Dashboard Overview */
+        /* ── Dashboard Grid ── */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -224,7 +261,6 @@
             margin-top: 24px;
         }
 
-        /* Withdrawal Progress Bar */
         .progress-card {
             display: flex;
             flex-direction: column;
@@ -237,7 +273,7 @@
             background-color: var(--bg-input);
             border-radius: 5px;
             overflow: hidden;
-            margin: 16px 0 8px 0;
+            margin: 16px 0 8px;
             border: 1px solid var(--border-color);
         }
 
@@ -248,7 +284,6 @@
             transition: width 0.5s ease;
         }
 
-        /* Lock Icon Tooltip */
         .tooltip-wrapper {
             position: relative;
             display: inline-block;
@@ -272,7 +307,7 @@
             transition: opacity 0.3s;
             font-size: 0.75rem;
             pointer-events: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
         .tooltip-wrapper:hover .tooltip-text {
@@ -280,7 +315,7 @@
             opacity: 1;
         }
 
-        /* Asset Table & Chart Grid */
+        /* ── Trading Grid & Charts ── */
         .trading-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -289,9 +324,17 @@
         }
 
         .chart-container {
-            height: 300px;
+            height: 320px;
             width: 100%;
             position: relative;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .chart-container iframe,
+        .chart-container>div {
+            width: 100% !important;
+            height: 100% !important;
         }
 
         svg.chart-line {
@@ -300,26 +343,81 @@
             overflow: visible;
         }
 
+        /* ── Asset / Wallet Section ── */
         .asset-list {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         .asset-item {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 16px;
+            padding: 14px 16px;
             background-color: var(--bg-input);
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .asset-item:hover {
+            border-color: var(--accent-blue);
+            background-color: rgba(0, 82, 255, 0.06);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 82, 255, 0.1);
+        }
+
+        .asset-item.selected {
+            border-color: var(--accent-blue);
+            background-color: rgba(0, 82, 255, 0.1);
         }
 
         .asset-info {
             display: flex;
             align-items: center;
             gap: 12px;
+        }
+
+        .asset-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .asset-icon.btc {
+            background: rgba(247, 147, 26, 0.15);
+        }
+
+        .asset-icon.eth {
+            background: rgba(98, 126, 234, 0.15);
+        }
+
+        .asset-icon.sol {
+            background: rgba(20, 241, 149, 0.15);
+        }
+
+        .asset-price-blink {
+            animation: pricePulse 0.4s ease;
+        }
+
+        @keyframes pricePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
         }
 
         .badge {
@@ -339,11 +437,21 @@
             color: var(--accent-red);
         }
 
-        /* Real-Time Community Chat Widget Panel */
+        .badge-blue {
+            background: rgba(0, 82, 255, 0.12);
+            color: var(--accent-blue);
+        }
+
+        .badge-gold {
+            background: rgba(247, 147, 26, 0.12);
+            color: var(--accent-gold);
+        }
+
+        /* ── Community Chat ── */
         .community-chat-card {
             display: flex;
             flex-direction: column;
-            height: 360px;
+            height: 380px;
         }
 
         .community-chat-messages {
@@ -376,7 +484,7 @@
             margin-left: 6px;
         }
 
-        /* History Table */
+        /* ── History Table ── */
         .table-responsive {
             overflow-x: auto;
         }
@@ -387,7 +495,8 @@
             text-align: left;
         }
 
-        th, td {
+        th,
+        td {
             padding: 16px;
             border-bottom: 1px solid var(--border-color);
             font-size: 0.9rem;
@@ -398,13 +507,10 @@
             font-weight: 500;
         }
 
-        /* --- Modals Overlay --- */
+        /* ── Modals ── */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             background-color: rgba(0, 0, 0, 0.75);
             display: flex;
             align-items: center;
@@ -465,7 +571,9 @@
             margin-bottom: 8px;
         }
 
-        .form-group input {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 12px 16px;
             background-color: var(--bg-input);
@@ -474,13 +582,21 @@
             color: var(--text-primary);
             outline: none;
             transition: var(--transition);
+            font-size: 0.9rem;
         }
 
-        .form-group input:focus {
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
             border-color: var(--accent-blue);
         }
 
-        /* --- Live Customer Support Chat --- */
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* ── Chat Widget ── */
         .chat-widget {
             position: fixed;
             bottom: 24px;
@@ -567,7 +683,7 @@
 
         .chat-bubble.user {
             background-color: var(--accent-blue);
-            color: #FFFFFF;
+            color: #FFF;
             align-self: flex-end;
         }
 
@@ -588,7 +704,380 @@
             outline: none;
         }
 
-        /* --- Responsive Styles --- */
+        /* ── Profile Page ── */
+        .profile-hero {
+            background: linear-gradient(135deg, #0A1628 0%, #0F1E3A 50%, #0A0E17 100%);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-hero::before {
+            content: '';
+            position: absolute;
+            top: -60px;
+            right: -60px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(0, 82, 255, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .profile-avatar-wrap {
+            display: flex;
+            align-items: flex-end;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center;
+            flex-shrink: 0;
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 30px rgba(0, 82, 255, 0.35);
+            display: block;
+        }
+
+        .profile-hero-info h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-hero-info p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .profile-badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .profile-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .profile-stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            text-align: center;
+            transition: var(--transition);
+        }
+
+        .profile-stat-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .profile-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profile-stat-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .profile-sections-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .profile-info-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .profile-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .profile-info-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-info-value {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .security-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            margin-bottom: 12px;
+        }
+
+        .security-item-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .security-status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .security-status-dot.active {
+            background: var(--accent-green);
+            box-shadow: 0 0 6px var(--accent-green);
+        }
+
+        .security-status-dot.inactive {
+            background: var(--accent-red);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-icon.deposit {
+            background: var(--accent-green-bg);
+            color: var(--accent-green);
+        }
+
+        .activity-icon.login {
+            background: rgba(0, 82, 255, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .activity-icon.trade {
+            background: rgba(247, 147, 26, 0.1);
+            color: var(--accent-gold);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: var(--border-color);
+            border-radius: 24px;
+            transition: 0.3s;
+        }
+
+        .toggle-slider:before {
+            content: '';
+            position: absolute;
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle-switch input:checked+.toggle-slider {
+            background: var(--accent-blue);
+        }
+
+        .toggle-switch input:checked+.toggle-slider:before {
+            transform: translateX(20px);
+        }
+
+        .referral-box {
+            background: linear-gradient(135deg, rgba(0, 82, 255, 0.1), rgba(225, 0, 255, 0.08));
+            border: 1px solid rgba(0, 82, 255, 0.2);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .referral-code {
+            font-family: monospace;
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            color: var(--accent-blue);
+            background: var(--bg-input);
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px dashed var(--border-color);
+            display: inline-block;
+        }
+
+        .verification-steps {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .verification-step {
+            flex: 1;
+            min-width: 140px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: center;
+        }
+
+        .verification-step.done {
+            border-color: var(--accent-green);
+        }
+
+        .verification-step.done .vs-icon {
+            color: var(--accent-green);
+        }
+
+        .vs-icon {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .vs-label {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+        }
+
+        .vs-status {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* Live ticker banner */
+        .ticker-banner {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .ticker-banner::-webkit-scrollbar {
+            display: none;
+        }
+
+        .ticker-pair {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            font-size: 0.875rem;
+        }
+
+        .ticker-name {
+            color: var(--text-secondary);
+        }
+
+        .ticker-price {
+            font-weight: 700;
+        }
+
+        .live-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            animation: livePulse 1.5s ease infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes livePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.7);
+            }
+        }
+
+        /* Chart section header */
+        .chart-asset-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chart-asset-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        /* Sparkline mini */
+        .asset-sparkline {
+            width: 80px;
+            height: 32px;
+        }
+
+        /* Responsive */
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -598,21 +1087,32 @@
         }
 
         @media (max-width: 992px) {
-            .dashboard-grid, .trading-grid {
+
+            .dashboard-grid,
+            .trading-grid,
+            .profile-sections-grid {
                 grid-template-columns: 1fr;
             }
+
+            .profile-stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
             .sidebar {
                 transform: translateX(-100%);
                 top: var(--header-height);
             }
+
             .sidebar.active {
                 transform: translateX(0);
             }
+
             .main-content {
                 margin-left: 0;
                 width: 100%;
                 padding: 16px;
             }
+
             .mobile-menu-btn {
                 display: block;
             }
@@ -622,309 +1122,766 @@
             .action-bar {
                 grid-template-columns: repeat(2, 1fr);
             }
+
             .chat-window {
                 width: calc(100vw - 32px);
                 right: -8px;
             }
+
+            .profile-stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
     </style>
 </head>
-<body>
 
+<body>
     <div class="app-container">
-        <!-- Header -->
+
+        <!-- ── Header ── -->
         <header class="header">
-            <div style="display: flex; align-items: center; gap: 16px;">
-                <button class="mobile-menu-btn" id="mobileMenuBtn">
-                    <i data-lucide="menu"></i>
-                </button>
-                <a href="#" class="brand">
-                    <i data-lucide="vault"></i>
-                    CryptoVault
-                </a>
+            <div style="display:flex;align-items:center;gap:16px;">
+                <button class="mobile-menu-btn" id="mobileMenuBtn"><i data-lucide="menu"></i></button>
+                <span class="br-mark">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                        <path d="M14 1L26 7.5V20.5L14 27L2 20.5V7.5L14 1Z" stroke="url(#gh1)" stroke-width="1.6" />
+                        <path d="M14 8L20 11.5V18.5L14 22L8 18.5V11.5L14 8Z" fill="url(#gh1)" opacity="0.85" />
+                        <defs>
+                            <linearGradient id="gh1" x1="2" y1="1" x2="26" y2="27" gradientUnits="userSpaceOnUse">
+                                <stop stop-color="#00F2FE" />
+                                <stop offset="1" stop-color="#E100FF" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </span>
+                <span class="br-name">Crypto<span class="br-accent">Vault</span></span>
             </div>
-            
             <div class="header-actions">
                 <button class="btn btn-secondary" id="themeToggleBtn" title="Toggle Theme">
                     <i data-lucide="moon" id="themeIcon"></i>
                 </button>
-                <div id="userProfileNav" style="display: flex; align-items: center; gap: 12px;">
-                    <span id="userEmailDisplay" style="font-size: 0.875rem; color: var(--text-secondary);"></span>
+                <div id="userProfileNav" style="display:flex;align-items:center;gap:12px;">
+                    <span id="userEmailDisplay" style="font-size:0.875rem;color:var(--text-secondary);"></span>
+                    <img id="headerAvatar" src="images/profilepic.jpg" alt="Profile"
+                        style="width:36px;height:36px;border-radius:50%;object-fit:cover;object-position:center;cursor:pointer;border:2px solid rgba(0,82,255,0.4);display:block;"
+                        onclick="showPage('profile')">
                 </div>
             </div>
         </header>
 
-        <!-- Sidebar Navigation -->
+        <!-- ── Sidebar ── -->
         <aside class="sidebar" id="sidebar">
-            <a href="#" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-            <a href="#" class="nav-item"><i data-lucide="line-chart"></i> Trade</a>
-            <a href="#" class="nav-item"><i data-lucide="wallet"></i> Assets</a>
-            <a href="#" class="nav-item"><i data-lucide="history"></i> History</a>
-            <a href="#settingsSection" class="nav-item"><i data-lucide="settings"></i> Settings</a>
+            <button class="nav-item active" id="nav-dashboard" onclick="showPage('dashboard')">
+                <i data-lucide="layout-dashboard"></i> Dashboard
+            </button>
+            <button class="nav-item" id="nav-trade" onclick="showPage('trade')">
+                <i data-lucide="line-chart"></i> Trade
+            </button>
+            <button class="nav-item" id="nav-assets" onclick="showPage('assets')">
+                <i data-lucide="wallet"></i> Assets
+            </button>
+            <button class="nav-item" id="nav-history" onclick="showPage('history')">
+                <i data-lucide="history"></i> History
+            </button>
+            <div class="nav-divider"></div>
+            <button class="nav-item" id="nav-profile" onclick="showPage('profile')">
+                <i data-lucide="user-circle"></i> Profile
+            </button>
+            <button class="nav-item" id="nav-settings" onclick="showPage('settings')">
+                <i data-lucide="settings"></i> Settings
+            </button>
+
+            <!-- Logout pushed to the bottom -->
+            <div style="margin-top:auto;padding-top:16px;">
+                <div class="nav-divider"></div>
+                <button class="nav-item" id="nav-logout" onclick="window.location.href='index.html'"
+                    style="color:#FF3B30;margin-top:8px;">
+                    <i data-lucide="log-out"></i> Log Out
+                </button>
+            </div>
         </aside>
 
-        <!-- Main Workspace -->
+
+        <!-- ── Main Content ── -->
         <main class="main-content">
-            
-            <!-- Dashboard Top Grid -->
-            <section class="dashboard-grid">
-                <!-- Balance & Actions Card -->
-                <div class="card">
-                    <div class="portfolio-header">
-                        <div class="portfolio-label">Total Portfolio Balance</div>
-                        <div class="portfolio-value" id="portfolioBalanceDisplay">$10,000.00</div>
-                    </div>
-                    
-                    <!-- Primary Coinbase Action Bar -->
-                    <div class="action-bar">
-                        <button class="btn btn-primary" onclick="openDepositModal()">
-                            <i data-lucide="arrow-down-left"></i> Deposit
-                        </button>
-                        
-                        <div class="tooltip-wrapper">
-                            <button class="btn btn-secondary btn-disabled" id="withdrawBtn" disabled>
-                                <i data-lucide="lock" id="withdrawIcon"></i> Withdraw
+
+            <!-- Live Ticker Banner (always visible) -->
+            <div class="ticker-banner" id="tickerBanner">
+                <div
+                    style="display:flex;align-items:center;gap:6px;color:var(--accent-green);font-size:0.78rem;font-weight:600;flex-shrink:0;">
+                    <span class="live-dot"></span> LIVE
+                </div>
+                <div class="ticker-pair">
+                    <span class="ticker-name">BTC/USD</span>
+                    <span class="ticker-price" id="tb-btc">—</span>
+                    <span id="tb-btc-chg" class="badge">—</span>
+                </div>
+                <div class="ticker-pair">
+                    <span class="ticker-name">ETH/USD</span>
+                    <span class="ticker-price" id="tb-eth">—</span>
+                    <span id="tb-eth-chg" class="badge">—</span>
+                </div>
+                <div class="ticker-pair">
+                    <span class="ticker-name">SOL/USD</span>
+                    <span class="ticker-price" id="tb-sol">—</span>
+                    <span id="tb-sol-chg" class="badge">—</span>
+                </div>
+                <div style="margin-left:auto;font-size:0.75rem;color:var(--text-secondary);" id="lastUpdateTime">
+                    Fetching…</div>
+            </div>
+
+            <!-- ════════════════════════════════ -->
+            <!-- PAGE: Dashboard                  -->
+            <!-- ════════════════════════════════ -->
+            <div class="page-section active" id="page-dashboard">
+                <section class="dashboard-grid">
+                    <div class="card">
+                        <div class="portfolio-header">
+                            <div class="portfolio-label">Total Portfolio Balance</div>
+                            <div class="portfolio-value" id="portfolioBalanceDisplay">$10,000.00</div>
+                        </div>
+                        <div class="action-bar">
+                            <button class="btn btn-primary" onclick="openDepositModal()">
+                                <i data-lucide="arrow-down-left"></i> Deposit
                             </button>
-                            <span class="tooltip-text" id="withdrawTooltip">Deposit $5,000 target to unlock withdrawals.</span>
+                            <div class="tooltip-wrapper">
+                                <button class="btn btn-secondary btn-disabled" id="withdrawBtn" disabled>
+                                    <i data-lucide="lock" id="withdrawIcon"></i> Withdraw
+                                </button>
+                                <span class="tooltip-text" id="withdrawTooltip">Deposit $5,000 target to unlock
+                                    withdrawals.</span>
+                            </div>
+                            <button class="btn btn-secondary" onclick="alert('Buy/Sell interface active.')" disabled>
+                                <i data-lucide="arrow-left-right"></i> Buy/Sell
+                            </button>
+                            <button class="btn btn-secondary" onclick="alert('Transfer mechanism active.')" disabled>
+                                <i data-lucide="send"></i> Transfer
+                            </button>
                         </div>
-                        
-                        <button class="btn btn-secondary" onclick="alert('Buy/Sell interface active.')">
-                            <i data-lucide="arrow-left-right"></i> Buy/Sell
-                        </button>
-                        <button class="btn btn-secondary" onclick="alert('Transfer mechanism active.')">
-                            <i data-lucide="send"></i> Transfer
-                        </button>
                     </div>
-                </div>
 
-                <!-- Withdrawal Progress Widget -->
-                <div class="card progress-card">
-                    <div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span class="portfolio-label">Withdrawal Progress</span>
-                            <i data-lucide="shield-check" style="color: var(--accent-blue);"></i>
-                        </div>
-                        <div style="font-size: 1.25rem; font-weight: 600; margin-top: 8px;" id="progressTextDisplay">
-                            $0.00 / $5,000.00
-                        </div>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-fill" id="progressBarFill"></div>
-                        </div>
-                        <p style="font-size: 0.75rem; color: var(--text-secondary);" id="progressStatusText">
-                            Deposit $5,000 cumulatively to activate instant withdrawals.
-                        </p>
-                    </div>
-                    <div style="font-size: 0.75rem; color: var(--accent-green); display: flex; align-items: center; gap: 4px; margin-top: 12px;">
-                        <i data-lucide="zap" size="14"></i> 10x Deposit Multiplier Active
-                    </div>
-                </div>
-            </section>
-
-            <!-- Trading Overview & Real-Time Crypto Community Chat Grid -->
-            <section class="trading-grid">
-                <!-- SVG Real-Time Price Chart Container -->
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <div class="card progress-card">
                         <div>
-                            <h3 style="font-size: 1.1rem; font-weight: 600;">BTC/USD Market View</h3>
-                            <span style="font-size: 0.8rem; color: var(--accent-green);" id="chartLivePrice">$64,230.50 (+2.4%)</span>
+                            <div style="display:flex;justify-content:space-between;align-items:center;">
+                                <span class="portfolio-label">Withdrawal Progress</span>
+                                <i data-lucide="shield-check" style="color:var(--accent-blue);"></i>
+                            </div>
+                            <div style="font-size:1.25rem;font-weight:600;margin-top:8px;" id="progressTextDisplay">
+                                $0.00 / $5,000.00</div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" id="progressBarFill"></div>
+                            </div>
+                            <p style="font-size:0.75rem;color:var(--text-secondary);" id="progressStatusText">Deposit
+                                $5,000 cumulatively to activate instant withdrawals.</p>
                         </div>
-                        <i data-lucide="trending-up" style="color: var(--accent-green);"></i>
+                        <div
+                            style="font-size:0.75rem;color:var(--accent-green);display:flex;align-items:center;gap:4px;margin-top:12px;">
+                            <i data-lucide="zap" size="14"></i> 10x Deposit Multiplier Active
+                        </div>
                     </div>
-                    <div class="chart-container">
-                        <svg class="chart-line" viewBox="0 0 500 150" preserveAspectRatio="none">
-                            <defs>
-                                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stop-color="#0052FF" stop-opacity="0.4"/>
-                                    <stop offset="100%" stop-color="#0052FF" stop-opacity="0"/>
-                                </linearGradient>
-                            </defs>
-                            <path id="chartArea" d="" fill="url(#chartGradient)"/>
-                            <path id="chartPath" d="" fill="none" stroke="#0052FF" stroke-width="3"/>
-                        </svg>
+                </section>
+
+                <!-- BTC Chart on dashboard -->
+                <section class="trading-grid">
+                    <div class="card" style="overflow:hidden;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                            <div class="chart-asset-title">
+                                <h3 style="font-size:1.1rem;font-weight:600;" id="dashChartTitle">BTC/USD Market View
+                                </h3>
+                                <span class="chart-asset-badge badge badge-gold" id="dashChartSymbol">BTC</span>
+                            </div>
+                            <span style="font-size:0.8rem;color:var(--accent-green);"
+                                id="dashChartPrice">Loading…</span>
+                        </div>
+                        <div class="chart-container" id="dashChartContainer"></div>
+                    </div>
+
+                    <div class="card community-chat-card">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <i data-lucide="globe" size="16" style="color:var(--accent-blue);"></i>
+                                <h3 style="font-size:1rem;font-weight:600;">Live Crypto Chat</h3>
+                            </div>
+                            <span class="badge badge-green" style="font-size:0.65rem;">● Live Feed</span>
+                        </div>
+                        <div class="community-chat-messages" id="communityChatMessages"></div>
+                        <form id="communityChatForm" style="display:flex;gap:8px;">
+                            <input type="text" id="communityChatInput" placeholder="Broadcast to traders…"
+                                autocomplete="off"
+                                style="flex:1;padding:8px 12px;background-color:var(--bg-input);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);font-size:0.85rem;outline:none;">
+                            <button type="submit" class="btn btn-primary" style="padding:8px 12px;"><i
+                                    data-lucide="send" size="14"></i></button>
+                        </form>
+                    </div>
+                </section>
+            </div>
+
+            <!-- ════════════════════════════════ -->
+            <!-- PAGE: Trade                       -->
+            <!-- ════════════════════════════════ -->
+            <div class="page-section" id="page-trade">
+                <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:24px;">Trade</h2>
+                <div class="trading-grid">
+                    <div class="card" style="overflow:hidden;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                            <div class="chart-asset-title">
+                                <h3 style="font-size:1.1rem;font-weight:600;" id="tradeChartTitle">BTC/USD – Live Chart
+                                </h3>
+                                <span class="chart-asset-badge badge badge-gold" id="tradeChartBadge">BTC</span>
+                            </div>
+                            <span style="font-size:0.85rem;color:var(--accent-green);" id="tradeChartLive">Live</span>
+                        </div>
+                        <div class="chart-container" id="tradeChartContainer" style="height:400px;"></div>
+                    </div>
+                    <div class="card" style="display:flex;flex-direction:column;gap:16px;">
+                        <h3 style="font-size:1rem;font-weight:600;">Place Order</h3>
+                        <div class="form-group">
+                            <label>Asset</label>
+                            <select id="tradeAssetSelect" onchange="switchTradeChart(this.value)"
+                                style="background:var(--bg-input);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);padding:12px 16px;width:100%;outline:none;">
+                                <option value="BTC">Bitcoin (BTC)</option>
+                                <option value="ETH">Ethereum (ETH)</option>
+                                <option value="SOL">Solana (SOL)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Order Type</label>
+                            <select
+                                style="background:var(--bg-input);border:1px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);padding:12px 16px;width:100%;outline:none;">
+                                <option>Market Order</option>
+                                <option>Limit Order</option>
+                                <option>Stop Order</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Amount (USD)</label>
+                            <input type="number" placeholder="0.00" min="0" step="0.01" disabled>
+                        </div>
+                        <button class="btn btn-primary" style="width:100%;"
+                            onclick="alert('Order placed successfully!')" disabled>
+                            <i data-lucide="zap"></i> Place Buy Order
+                        </button>
+                        <button class="btn btn-secondary"
+                            style="width:100%;border-color:var(--accent-red);color:var(--accent-red);"
+                            onclick="alert('Sell order placed!')" disabled>
+                            <i data-lucide="trending-down"></i> Place Sell Order
+                        </button>
                     </div>
                 </div>
+            </div>
 
-                <!-- Real-Time Crypto Community Chat -->
-                <div class="card community-chat-card">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <i data-lucide="globe" size="16" style="color: var(--accent-blue);"></i>
-                            <h3 style="font-size: 1rem; font-weight: 600;">Live Crypto Chat</h3>
+            <!-- ════════════════════════════════ -->
+            <!-- PAGE: Assets (Wallet Section)    -->
+            <!-- ════════════════════════════════ -->
+            <div class="page-section" id="page-assets">
+                <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:8px;">My Assets</h2>
+                <p style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:24px;">Click any asset to view its
+                    live market chart</p>
+
+                <div class="trading-grid" id="walletSection">
+                    <!-- Live Chart Panel -->
+                    <div class="card" style="overflow:hidden;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                            <div class="chart-asset-title">
+                                <h3 style="font-size:1.1rem;font-weight:600;" id="assetChartTitle">Select an asset to
+                                    view chart</h3>
+                                <span class="chart-asset-badge badge badge-gold" id="assetChartBadge"
+                                    style="display:none;"></span>
+                            </div>
+                            <span style="font-size:0.85rem;" id="assetChartPrice"></span>
                         </div>
-                        <span class="badge badge-green" style="font-size: 0.65rem;">● Live Feed</span>
-                    </div>
-                    <div class="community-chat-messages" id="communityChatMessages">
-                        <!-- Injected live feed messages -->
-                    </div>
-                    <form id="communityChatForm" style="display: flex; gap: 8px;">
-                        <input type="text" id="communityChatInput" placeholder="Broadcast to traders..." autocomplete="off" style="flex: 1; padding: 8px 12px; background-color: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.85rem; outline: none;">
-                        <button type="submit" class="btn btn-primary" style="padding: 8px 12px;"><i data-lucide="send" size="14"></i></button>
-                    </form>
-                </div>
-            </section>
-
-            <!-- Asset Watchlist -->
-            <section class="card" style="margin-bottom: 32px;">
-                <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px;">Live Assets</h3>
-                <div class="asset-list">
-                    <div class="asset-item">
-                        <div class="asset-info">
-                            <i data-lucide="bitcoin" style="color: #F7931A;"></i>
-                            <div>
-                                <div style="font-weight: 600;">Bitcoin</div>
-                                <div style="font-size: 0.75rem; color: var(--text-secondary);">BTC</div>
+                        <div class="chart-container" id="assetChartContainer"
+                            style="height:350px;overflow:hidden;border-radius:var(--radius-sm);">
+                            <div
+                                style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:var(--bg-input);">
+                                <i data-lucide="mouse-pointer-click"
+                                    style="width:40px;height:40px;margin-bottom:12px;opacity:0.4;"></i>
+                                <p style="color:var(--text-secondary);">Click an asset below to load live chart</p>
                             </div>
                         </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 600;" id="btcPrice">$64,230.50</div>
-                            <span class="badge badge-green" id="btcChange">+2.4%</span>
-                        </div>
                     </div>
 
-                    <div class="asset-item">
-                        <div class="asset-info">
-                            <i data-lucide="coins" style="color: #627EEA;"></i>
-                            <div>
-                                <div style="font-weight: 600;">Ethereum</div>
-                                <div style="font-size: 0.75rem; color: var(--text-secondary);">ETH</div>
+                    <!-- Asset List -->
+                    <div class="card" style="padding:20px;">
+                        <h3 style="font-size:1rem;font-weight:600;margin-bottom:16px;">Live Market Prices</h3>
+                        <div class="asset-list">
+                            <!-- BTC -->
+                            <div class="asset-item" id="asset-btc" onclick="selectAsset('BTC')">
+                                <div class="asset-info">
+                                    <div class="asset-icon btc">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="#F7931A">
+                                            <path
+                                                d="M23.638 14.904c-1.602 6.425-8.11 10.34-14.533 8.735C2.68 22.036-1.23 15.526.37 9.1 1.974 2.676 8.48-1.24 14.905.367c6.425 1.605 10.34 8.112 8.733 14.537zm-6.41-4.025c.262-1.757-.985-2.7-2.66-3.33l.544-2.183-1.33-.333-.53 2.126c-.35-.088-.708-.17-1.065-.252l.534-2.14-1.328-.333-.544 2.183c-.29-.066-.574-.131-.85-.2l.002-.007-1.832-.458-.353 1.42s.985.225.964.24c.537.134.634.49.617.77l-.618 2.48c.037.01.084.024.137.046l-.14-.034-.867 3.474c-.065.163-.232.406-.604.313.014.02-.965-.241-.965-.241l-.66 1.52 1.73.432c.321.08.637.164.948.244l-.55 2.202 1.327.332.544-2.186c.363.099.716.19 1.063.276l-.54 2.17 1.329.331.55-2.198c2.268.43 3.975.257 4.694-1.797.578-1.651-.028-2.604-1.223-3.226.87-.2 1.524-.773 1.699-1.953zm-3.042 4.268c-.41 1.65-3.185.758-4.088.535l.73-2.92c.902.225 3.797.671 3.358 2.385zm.41-4.293c-.375 1.5-2.693.737-3.447.55l.662-2.646c.753.188 3.18.54 2.785 2.096z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight:600;">Bitcoin</div>
+                                        <div style="font-size:0.75rem;color:var(--text-secondary);">BTC · Market Cap #1
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-weight:700;" id="btcPrice">Loading…</div>
+                                    <span class="badge" id="btcChange">—</span>
+                                </div>
+                            </div>
+
+                            <!-- ETH -->
+                            <div class="asset-item" id="asset-eth" onclick="selectAsset('ETH')">
+                                <div class="asset-info">
+                                    <div class="asset-icon eth">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="#627EEA">
+                                            <path
+                                                d="M11.944 17.97L4.58 13.62 11.943 24l7.37-10.38-7.372 4.35h.003zM12.056 0L4.69 12.223l7.365 4.354 7.365-4.35L12.056 0z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight:600;">Ethereum</div>
+                                        <div style="font-size:0.75rem;color:var(--text-secondary);">ETH · Market Cap #2
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-weight:700;" id="ethPrice">Loading…</div>
+                                    <span class="badge" id="ethChange">—</span>
+                                </div>
+                            </div>
+
+                            <!-- SOL -->
+                            <div class="asset-item" id="asset-sol" onclick="selectAsset('SOL')">
+                                <div class="asset-info">
+                                    <div class="asset-icon sol">
+                                        <svg width="22" height="22" viewBox="0 0 24 24" fill="#14F195">
+                                            <path
+                                                d="M4 18.5h14.5l-2 2H4v-2zm16.5-7H6L8 9.5h14.5l-2 2zM4 5.5h14.5l-2 2H4v-2z" />
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight:600;">Solana</div>
+                                        <div style="font-size:0.75rem;color:var(--text-secondary);">SOL · Market Cap #6
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="text-align:right;">
+                                    <div style="font-weight:700;" id="solPrice">Loading…</div>
+                                    <span class="badge" id="solChange">—</span>
+                                </div>
+                            </div>
+
+                            <!-- Market summary mini-stats -->
+                            <div
+                                style="background:var(--bg-input);border-radius:var(--radius-sm);padding:16px;margin-top:8px;border:1px solid var(--border-color);">
+                                <div
+                                    style="font-size:0.78rem;color:var(--text-secondary);margin-bottom:10px;display:flex;align-items:center;gap:6px;">
+                                    <span class="live-dot"></span> Live market data via CoinGecko
+                                </div>
+                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.8rem;">
+                                    <div><span style="color:var(--text-secondary);">BTC Dom.</span><br><strong
+                                            id="btcDom">—</strong></div>
+                                    <div><span style="color:var(--text-secondary);">Crypto Market Cap</span><br><strong
+                                            id="globalMktCap">—</strong></div>
+                                </div>
                             </div>
                         </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 600;" id="ethPrice">$3,450.20</div>
-                            <span class="badge badge-green" id="ethChange">+1.8%</span>
-                        </div>
                     </div>
+                </div>
+            </div>
 
-                    <div class="asset-item">
-                        <div class="asset-info">
-                            <i data-lucide="sun" style="color: #14F195;"></i>
-                            <div>
-                                <div style="font-weight: 600;">Solana</div>
-                                <div style="font-size: 0.75rem; color: var(--text-secondary);">SOL</div>
+            <!-- ════════════════════════════════ -->
+            <!-- PAGE: History                    -->
+            <!-- ════════════════════════════════ -->
+            <div class="page-section" id="page-history">
+                <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:24px;">Transaction History Ledger</h2>
+                <div class="card">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Amount Deposited</th>
+                                    <th>10x Credit Added</th>
+                                    <th>Timestamp</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactionLedgerBody"><!-- injected --></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ════════════════════════════════ -->
+            <!-- PAGE: Profile                    -->
+            <!-- ════════════════════════════════ -->
+            <div class="page-section" id="page-profile">
+
+                <!-- Hero -->
+                <div class="profile-hero">
+                    <div class="profile-avatar-wrap">
+                        <img src="images/profilepic.jpg" alt="Profile Picture" class="profile-avatar"
+                            id="profileAvatarInitial">
+                        <div class="profile-hero-info">
+                            <h2 id="profileDisplayName">Alex Morgan</h2>
+                            <p id="profileEmailDisplay">alex.morgan@cryptovault.io</p>
+                            <div class="profile-badges">
+                                <span class="badge badge-green">✓ Verified Trader</span>
+                                <span class="badge badge-blue">⚡ 10x Multiplier</span>
+                                <span class="badge badge-gold">🏆 Premium Member</span>
                             </div>
                         </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 600;" id="solPrice">$145.80</div>
-                            <span class="badge badge-red" id="solChange">-0.5%</span>
+                    </div>
+                </div>
+
+                <!-- KYC Verification Steps -->
+                <div class="verification-steps">
+                    <div class="verification-step done">
+                        <div class="vs-icon">📧</div>
+                        <div class="vs-label">Email</div>
+                        <div class="vs-status" style="color:var(--accent-green);">Verified</div>
+                    </div>
+                    <div class="verification-step done">
+                        <div class="vs-icon">📱</div>
+                        <div class="vs-label">Phone</div>
+                        <div class="vs-status" style="color:var(--accent-green);">Verified</div>
+                    </div>
+                    <div class="verification-step done">
+                        <div class="vs-icon">🪪</div>
+                        <div class="vs-label">Gov. ID</div>
+                        <div class="vs-status" style="color:var(--accent-green);">Verified</div>
+                    </div>
+                    <div class="verification-step done">
+                        <div class="vs-icon">🏠</div>
+                        <div class="vs-label">Address</div>
+                        <div class="vs-status" style="color:var(--accent-green);">Verified</div>
+                    </div>
+                    <div class="verification-step">
+                        <div class="vs-icon">💳</div>
+                        <div class="vs-label">Payment</div>
+                        <div class="vs-status" style="color:var(--accent-gold);">Pending</div>
+                    </div>
+                </div>
+
+                <!-- Stat Cards -->
+                <div class="profile-stats-grid">
+                    <div class="profile-stat-card">
+                        <div class="profile-stat-value" id="profileBalance" style="color:var(--accent-blue);">$0.00
+                        </div>
+                        <div class="profile-stat-label">Portfolio Balance</div>
+                    </div>
+                    <div class="profile-stat-card">
+                        <div class="profile-stat-value" id="profileDeposits" style="color:var(--accent-green);">$0.00
+                        </div>
+                        <div class="profile-stat-label">Total Raw Deposits</div>
+                    </div>
+                    <div class="profile-stat-card">
+                        <div class="profile-stat-value" style="color:var(--accent-gold);">10x</div>
+                        <div class="profile-stat-label">Multiplier Active</div>
+                    </div>
+                    <div class="profile-stat-card">
+                        <div class="profile-stat-value" id="profileTxCount" style="color:var(--accent-violet);">0</div>
+                        <div class="profile-stat-label">Transactions</div>
+                    </div>
+                </div>
+
+                <!-- Info + Security Grid -->
+                <div class="profile-sections-grid">
+                    <!-- Personal Info -->
+                    <div class="card">
+                        <h3
+                            style="font-size:1rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                            <i data-lucide="user" size="16"></i> Personal Information
+                        </h3>
+                        <div class="profile-info-row">
+                            <span class="profile-info-label"><i data-lucide="user" size="14"></i> Full Name</span>
+                            <span class="profile-info-value" id="pi-name">Alex Morgan</span>
+                        </div>
+                        <div class="profile-info-row">
+                            <span class="profile-info-label"><i data-lucide="mail" size="14"></i> Email</span>
+                            <span class="profile-info-value" id="pi-email">alex.morgan@cryptovault.io</span>
+                        </div>
+                        <div class="profile-info-row">
+                            <span class="profile-info-label"><i data-lucide="phone" size="14"></i> Phone</span>
+                            <span class="profile-info-value">+1 (555) 012-3456</span>
+                        </div>
+                        <div class="profile-info-row">
+                            <span class="profile-info-label"><i data-lucide="globe" size="14"></i> Country</span>
+                            <span class="profile-info-value">United States 🇺🇸</span>
+                        </div>
+                        <div class="profile-info-row">
+                            <span class="profile-info-label"><i data-lucide="calendar" size="14"></i> Member
+                                Since</span>
+                            <span class="profile-info-value">January 2024</span>
+                        </div>
+                        <div class="profile-info-row">
+                            <span class="profile-info-label"><i data-lucide="dollar-sign" size="14"></i> Base
+                                Currency</span>
+                            <span class="profile-info-value">USD ($)</span>
+                        </div>
+                        <div class="profile-info-row">
+                            <span class="profile-info-label"><i data-lucide="briefcase" size="14"></i> Account
+                                Tier</span>
+                            <span class="profile-info-value" style="color:var(--accent-gold);">Premium</span>
+                        </div>
+                        <button class="btn btn-secondary" style="width:100%;margin-top:16px;"
+                            onclick="alert('Profile edit form coming soon.')">
+                            <i data-lucide="edit-2" size="14"></i> Edit Profile
+                        </button>
+                    </div>
+
+                </div>
+
+                <!-- Payment Methods + Activity -->
+                <div class="profile-sections-grid">
+                    <!-- Payment Methods -->
+                    <div class="card">
+                        <h3
+                            style="font-size:1rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                            <i data-lucide="credit-card" size="16"></i> Payment Methods
+                        </h3>
+                        <div class="security-item">
+                            <div class="security-item-left">
+                                <div
+                                    style="width:36px;height:36px;background:rgba(0,82,255,0.1);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:var(--accent-blue);">
+                                    <i data-lucide="bitcoin" size="16"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size:0.9rem;font-weight:600;">Bitcoin (BTC)</div>
+                                    <div style="font-size:0.72rem;color:var(--text-secondary);font-family:monospace;">
+                                        bc1qxy2k…x0wlh</div>
+                                </div>
+                            </div>
+                            <span class="badge badge-green">Primary</span>
+                        </div>
+                        <div class="security-item">
+                            <div class="security-item-left">
+                                <div
+                                    style="width:36px;height:36px;background:rgba(98,126,234,0.1);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:#627EEA;">
+                                    <i data-lucide="coins" size="16"></i>
+                                </div>
+                                <div>
+                                    <div style="font-size:0.9rem;font-weight:600;">Ethereum (ETH)</div>
+                                    <div style="font-size:0.72rem;color:var(--text-secondary);font-family:monospace;">
+                                        0x71C…9932</div>
+                                </div>
+                            </div>
+                            <span class="badge" style="background:rgba(98,126,234,0.1);color:#627EEA;">Active</span>
+                        </div>
+                        <button class="btn btn-secondary" style="width:100%;margin-top:8px;"
+                            onclick="alert('Add payment method.')">
+                            <i data-lucide="plus" size="14"></i> Add Wallet Address
+                        </button>
+                    </div>
+
+                    <!-- Recent Activity -->
+                    <div class="card">
+                        <h3
+                            style="font-size:1rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                            <i data-lucide="activity" size="16"></i> Recent Activity
+                        </h3>
+                        <div class="activity-item">
+                            <div class="activity-icon deposit"><i data-lucide="arrow-down" size="14"></i></div>
+                            <div style="flex:1;">
+                                <div style="font-size:0.9rem;font-weight:600;">BTC Deposit Received</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">+$800 → $8,000 credited
+                                </div>
+                            </div>
+                            <div style="font-size:0.75rem;color:var(--text-secondary);">1d ago</div>
+                        </div>
+                        <div class="activity-item">
+                            <div class="activity-icon deposit"><i data-lucide="arrow-down" size="14"></i></div>
+                            <div style="flex:1;">
+                                <div style="font-size:0.9rem;font-weight:600;">BTC Deposit Received</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">+$1,000 → $10,000 credited
+                                </div>
+                            </div>
+                            <div style="font-size:0.75rem;color:var(--text-secondary);">2d ago</div>
+                        </div>
+                        <!-- <div class="activity-item">
+                            <div class="activity-icon login"><i data-lucide="log-in" size="14"></i></div>
+                            <div style="flex:1;">
+                                <div style="font-size:0.9rem;font-weight:600;">New Login Detected</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">Chrome · Windows · US</div>
+                            </div>
+                            <div style="font-size:0.75rem;color:var(--text-secondary);">3d ago</div>
+                        </div> -->
+                        <div class="activity-item">
+                            <div class="activity-icon deposit"><i data-lucide="arrow-down" size="14"></i></div>
+                            <div style="flex:1;">
+                                <div style="font-size:0.9rem;font-weight:600;">BTC Deposit Received</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">+$200 → $2,000 credited
+                                </div>
+                            </div>
+                            <div style="font-size:0.75rem;color:var(--text-secondary);">5d ago</div>
+                        </div>
+                        <!-- <div class="activity-item">
+                            <div class="activity-icon trade"><i data-lucide="repeat" size="14"></i></div>
+                            <div style="flex:1;">
+                                <div style="font-size:0.9rem;font-weight:600;">Account Verified (KYC)</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">Level 2 verification
+                                    approved</div>
+                            </div>
+                            <div style="font-size:0.75rem;color:var(--text-secondary);">1w ago</div>
+                        </div> -->
+                    </div>
+                </div>
+
+                <!-- Preferences -->
+                <div class="card" style="margin-bottom:24px;">
+                    <h3
+                        style="font-size:1rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+                        <i data-lucide="sliders-horizontal" size="16"></i> Preferences & Notifications
+                    </h3>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;">
+                        <div class="security-item">
+                            <div>
+                                <div style="font-size:0.9rem;font-weight:600;">Price Alerts</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">Push & email notifications
+                                </div>
+                            </div>
+                            <label class="toggle-switch"><input type="checkbox" checked><span
+                                    class="toggle-slider"></span></label>
+                        </div>
+                        <div class="security-item">
+                            <div>
+                                <div style="font-size:0.9rem;font-weight:600;">Newsletter</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">Weekly market digest</div>
+                            </div>
+                            <label class="toggle-switch"><input type="checkbox"><span
+                                    class="toggle-slider"></span></label>
+                        </div>
+                        <div class="security-item">
+                            <div>
+                                <div style="font-size:0.9rem;font-weight:600;">Dark Mode</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">Current: Dark</div>
+                            </div>
+                            <label class="toggle-switch"><input type="checkbox" id="darkModeToggle" checked
+                                    onchange="toggleThemeFromProfile(this)"><span class="toggle-slider"></span></label>
+                        </div>
+                        <div class="security-item">
+                            <div>
+                                <div style="font-size:0.9rem;font-weight:600;">Trading Sounds</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">Order fill sound effects
+                                </div>
+                            </div>
+                            <label class="toggle-switch"><input type="checkbox" checked><span
+                                    class="toggle-slider"></span></label>
                         </div>
                     </div>
                 </div>
-            </section>
 
-            <!-- Transaction Ledger -->
-            <section class="card" style="margin-bottom: 32px;">
-                <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px;">Transaction History Ledger</h3>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Amount Deposited</th>
-                                <th>10x Credit Added</th>
-                                <th>Timestamp</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transactionLedgerBody">
-                            <!-- Injected dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Settings Section -->
-            <section class="card" id="settingsSection">
-                <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px;">User Profile & Settings</h3>
-                <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
-                    <div>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Account Status</p>
-                        <p style="font-weight: 600; color: var(--accent-green);">Verified Trader</p>
-                    </div>
-                    <div>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Base Currency</p>
-                        <p style="font-weight: 600;">USD ($)</p>
-                    </div>
-                    <div>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Security</p>
-                        <p style="font-weight: 600;">2FA Active</p>
+                <!-- Danger Zone -->
+                <div class="card" style="border-color:var(--accent-red-bg);">
+                    <h3
+                        style="font-size:1rem;font-weight:600;margin-bottom:12px;color:var(--accent-red);display:flex;align-items:center;gap:8px;">
+                        <i data-lucide="alert-triangle" size="16"></i> Danger Zone
+                    </h3>
+                    <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:16px;">Irreversible account
+                        actions. Please proceed with caution.</p>
+                    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+                        <button class="btn btn-secondary"
+                            style="border-color:var(--accent-red);color:var(--accent-red);"
+                            onclick="alert('Account suspension requested. Contact support.')">
+                            <i data-lucide="pause-circle" size="14"></i> Suspend Account
+                        </button>
+                        <button class="btn btn-secondary"
+                            style="border-color:var(--accent-red);color:var(--accent-red);"
+                            onclick="alert('Please contact support@cryptovault.io to delete your account.')">
+                            <i data-lucide="trash-2" size="14"></i> Delete Account
+                        </button>
                     </div>
                 </div>
-            </section>
+            </div>
+
+            <!-- ════════════════════════════════ -->
+            <!-- PAGE: Settings                   -->
+            <!-- ════════════════════════════════ -->
+            <div class="page-section" id="page-settings">
+                <h2 style="font-size:1.4rem;font-weight:700;margin-bottom:24px;">Settings</h2>
+                <div class="card">
+                    <h3 style="font-size:1rem;font-weight:600;margin-bottom:16px;">Account Status</h3>
+                    <div style="display:flex;gap:24px;align-items:center;flex-wrap:wrap;">
+                        <div>
+                            <p style="font-size:0.85rem;color:var(--text-secondary);">Account Status</p>
+                            <p style="font-weight:600;color:var(--accent-green);">Verified Trader</p>
+                        </div>
+                        <div>
+                            <p style="font-size:0.85rem;color:var(--text-secondary);">Base Currency</p>
+                            <p style="font-weight:600;">USD ($)</p>
+                        </div>
+                        <div>
+                            <p style="font-size:0.85rem;color:var(--text-secondary);">Security</p>
+                            <p style="font-weight:600;">2FA Active</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </main>
     </div>
 
-    <!-- Deposit Info Modal -->
+    <!-- ── Deposit Modal ── -->
     <div class="modal-overlay" id="depositModal">
         <div class="modal">
             <div class="modal-header">
-                <h3 style="font-size: 1.25rem;">Deposit Bitcoin</h3>
+                <h3 style="font-size:1.25rem;">Deposit Bitcoin</h3>
                 <button class="modal-close-btn" onclick="closeModal('depositModal')"><i data-lucide="x"></i></button>
             </div>
-            
-            <!-- 10x Multiplier Notice -->
-            <div style="background-color: var(--accent-green-bg); color: var(--accent-green); padding: 12px; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 20px;">
-                <i data-lucide="sparkles" size="16"></i> <strong>10x Multiplier Rule Active:</strong> Any BTC amount sent to this network address will automatically be multiplied by 10 and credited to your dashboard balance.
+            <div
+                style="background-color:var(--accent-green-bg);color:var(--accent-green);padding:12px;border-radius:var(--radius-sm);font-size:0.85rem;margin-bottom:20px;">
+                <i data-lucide="sparkles" size="16"></i> <strong>10x Multiplier Rule Active:</strong> Any BTC amount
+                sent to this address is multiplied ×10 and credited instantly.
             </div>
-            
-            <!-- Wallet Address Display -->
-            <div style="margin-bottom: 24px;">
-                <label style="display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Network: Bitcoin (BTC)</label>
-                <div style="background-color: var(--bg-input); border: 1px dashed var(--border-color); padding: 12px 16px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-                    <span id="walletAddress" style="font-family: monospace; font-size: 0.9rem; color: var(--text-primary); word-break: break-all;">
-                        bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
-                    </span>
-                    <button class="btn btn-secondary" onclick="copyWalletAddress()" style="padding: 6px 12px; font-size: 0.8rem; flex-shrink: 0;">
-                        <i data-lucide="copy" size="14"></i> Copy
-                    </button>
+            <div style="margin-bottom:24px;">
+                <label style="display:block;font-size:0.85rem;color:var(--text-secondary);margin-bottom:8px;">Network:
+                    Bitcoin (BTC)</label>
+                <div
+                    style="background-color:var(--bg-input);border:1px dashed var(--border-color);padding:12px 16px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                    <span id="walletAddress"
+                        style="font-family:monospace;font-size:0.9rem;color:var(--text-primary);word-break:break-all;">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</span>
+                    <button class="btn btn-secondary" onclick="copyWalletAddress()"
+                        style="padding:6px 12px;font-size:0.8rem;flex-shrink:0;"><i data-lucide="copy" size="14"></i>
+                        Copy</button>
                 </div>
             </div>
-
-            <!-- Action Button -->
-            <button type="button" class="btn btn-primary" style="width: 100%;" onclick="confirmDepositAction()">
-                Deposit Now
-            </button>
+            <button type="button" class="btn btn-primary" style="width:100%;" onclick="confirmDepositAction()">Deposit
+                Now</button>
         </div>
     </div>
 
-    <!-- Customer Support Floating Chat Widget -->
+    <!-- ── Support Chat ── -->
     <div class="chat-widget">
-        <button class="chat-toggle" id="chatToggleBtn">
-            <i data-lucide="message-square"></i>
-        </button>
+        <button class="chat-toggle" id="chatToggleBtn"><i data-lucide="message-square"></i></button>
         <div class="chat-window" id="chatWindow">
             <div class="chat-header">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <i data-lucide="bot" style="color: var(--accent-blue);"></i>
-                    <span style="font-weight: 600; font-size: 0.9rem;">CryptoVault Support</span>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <i data-lucide="bot" style="color:var(--accent-blue);"></i>
+                    <span style="font-weight:600;font-size:0.9rem;">CryptoVault Support</span>
                 </div>
                 <button class="modal-close-btn" id="chatCloseBtn"><i data-lucide="x"></i></button>
             </div>
             <div class="chat-messages" id="chatMessages">
-                <div class="chat-bubble bot">
-                    Hello! Welcome to CryptoVault. How can I assist you with your portfolio or deposits today?
-                </div>
+                <div class="chat-bubble bot">Hello! Welcome to CryptoVault. How can I assist you with your portfolio or
+                    deposits today?</div>
             </div>
             <form class="chat-input-area" id="chatForm">
-                <input type="text" id="chatInput" placeholder="Type a message..." autocomplete="off">
-                <button type="submit" class="btn btn-primary" style="padding: 8px 12px;"><i data-lucide="send" size="16"></i></button>
+                <input type="text" id="chatInput" placeholder="Type a message…" autocomplete="off">
+                <button type="submit" class="btn btn-primary" style="padding:8px 12px;"><i data-lucide="send"
+                        size="16"></i></button>
             </form>
         </div>
     </div>
 
-    <!-- Core Application Logic -->
+    <!-- ── Scripts ── -->
     <script>
-        // --- 1. EDIT YOUR DEPOSITS HERE ---
+        // ── App Deposits Config ──
         const myDeposits = [
             { amount: 1000, date: "8/18/2026, 10:30:00 AM" },
-            { amount: 200, date: "8/18/2026, 01:15:00 PM" }
+            { amount: 200, date: "8/18/2026, 01:15:00 PM" },
+            { amount: 800, date: "8/19/2026, 11:00:00 AM" }
         ];
-        // ----------------------------------
-
         const TARGET_WITHDRAWAL_DEPOSIT = 5000.00;
         const BASE_BALANCE = 10000.00;
 
-        // --- 2. AUTOMATIC CALCULATION ENGINE ---
         let calculatedRawDeposits = 0;
         let totalCreditedBonus = 0;
         let formattedTransactions = [];
@@ -933,25 +1890,25 @@
             let creditedAmt = dep.amount * 10;
             calculatedRawDeposits += dep.amount;
             totalCreditedBonus += creditedAmt;
-            
-            formattedTransactions.push({
-                id: index,
-                rawAmount: dep.amount,
-                creditedAmount: creditedAmt,
-                timestamp: dep.date
-            });
+            formattedTransactions.push({ id: index, rawAmount: dep.amount, creditedAmount: creditedAmt, timestamp: dep.date });
         });
 
-        // --- 3. STATE MANAGEMENT ---
         let state = {
             user: JSON.parse(localStorage.getItem('cv_user')) || null,
             rawDeposits: calculatedRawDeposits,
             totalBalance: BASE_BALANCE + totalCreditedBonus,
             transactions: formattedTransactions,
-            theme: localStorage.getItem('cv_theme') || 'dark'
+            theme: localStorage.getItem('cv_theme') || 'dark',
+            currentChartSymbol: 'BTC',
+            prices: { BTC: null, ETH: null, SOL: null }
         };
 
-        // --- DOM Selectors ---
+        // ── Live Market Price State ──
+        const COINGECKO_IDS = { BTC: 'bitcoin', ETH: 'ethereum', SOL: 'solana' };
+        const SYMBOL_COLORS = { BTC: '#F7931A', ETH: '#627EEA', SOL: '#14F195' };
+        const SYMBOL_LABELS = { BTC: 'Bitcoin', ETH: 'Ethereum', SOL: 'Solana' };
+
+        // DOM refs
         const portfolioBalanceDisplay = document.getElementById('portfolioBalanceDisplay');
         const progressTextDisplay = document.getElementById('progressTextDisplay');
         const progressBarFill = document.getElementById('progressBarFill');
@@ -962,24 +1919,34 @@
         const themeToggleBtn = document.getElementById('themeToggleBtn');
         const themeIcon = document.getElementById('themeIcon');
 
-        // --- Initialize Application ---
+        // ── Init ──
         document.addEventListener('DOMContentLoaded', () => {
-            initLucide();
+            if (window.lucide) lucide.createIcons();
             applyTheme(state.theme);
             updateUI();
-            initChart();
-            initLivePrices();
             setupEventListeners();
             initCommunityChat();
+            fetchLivePrices();          // first fetch immediately
+            setInterval(fetchLivePrices, 15000); // refresh every 15 s
+            loadTradingViewChart('dashChartContainer', 'BTC');
+            loadTradingViewChart('tradeChartContainer', 'BTC');
+            populateProfilePage();
         });
 
-        function initLucide() {
-            if (window.lucide) {
-                lucide.createIcons();
-            }
+        // ── Page Navigation ──
+        function showPage(page) {
+            document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            const el = document.getElementById('page-' + page);
+            if (el) el.classList.add('active');
+            const nav = document.getElementById('nav-' + page);
+            if (nav) nav.classList.add('active');
+            // close mobile sidebar
+            document.getElementById('sidebar').classList.remove('active');
+            if (window.lucide) lucide.createIcons();
         }
 
-        // --- UI Update Pipeline ---
+        // ── UI Update Pipeline ──
         function updateUI() {
             portfolioBalanceDisplay.textContent = formatCurrency(state.totalBalance);
             progressTextDisplay.textContent = `${formatCurrency(state.rawDeposits)} / ${formatCurrency(TARGET_WITHDRAWAL_DEPOSIT)}`;
@@ -999,37 +1966,240 @@
             }
 
             renderLedger();
-            initLucide();
+            if (window.lucide) lucide.createIcons();
         }
 
         function renderLedger() {
             transactionLedgerBody.innerHTML = '';
             if (state.transactions.length === 0) {
-                transactionLedgerBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-secondary);">No deposit transactions found</td></tr>`;
+                transactionLedgerBody.innerHTML = `<tr><td colspan="5" style="text-align:center;color:var(--text-secondary);">No deposit transactions found</td></tr>`;
                 return;
             }
-
             state.transactions.slice().reverse().forEach(tx => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td style="font-weight: 600;"><span style="color: var(--accent-green);">Deposit</span></td>
-                    <td>${formatCurrency(tx.rawAmount)}</td>
-                    <td style="color: var(--accent-green); font-weight: 600;">+${formatCurrency(tx.creditedAmount)}</td>
-                    <td style="color: var(--text-secondary);">${tx.timestamp}</td>
-                    <td><span class="badge badge-green">Completed</span></td>
-                `;
+                <td style="font-weight:600;"><span style="color:var(--accent-green);">Deposit</span></td>
+                <td>${formatCurrency(tx.rawAmount)}</td>
+                <td style="color:var(--accent-green);font-weight:600;">+${formatCurrency(tx.creditedAmount)}</td>
+                <td style="color:var(--text-secondary);">${tx.timestamp}</td>
+                <td><span class="badge badge-green">Completed</span></td>
+            `;
                 transactionLedgerBody.appendChild(tr);
             });
         }
 
-        // --- Wallet & Deposit Actions ---
+        // ── Profile Page Population ──
+        function populateProfilePage() {
+            const email = (state.user && state.user.email) ? state.user.email : 'alex.morgan@cryptovault.io';
+            const name = email.split('@')[0].replace(/[._]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            const initial = name.charAt(0).toUpperCase();
+
+            // Both profileAvatarInitial and headerAvatar are now <img> tags — no textContent
+            document.getElementById('profileDisplayName').textContent = name;
+            document.getElementById('profileEmailDisplay').textContent = email;
+            document.getElementById('pi-name').textContent = name;
+            document.getElementById('pi-email').textContent = email;
+
+            document.getElementById('profileBalance').textContent = formatCurrency(state.totalBalance);
+            document.getElementById('profileDeposits').textContent = formatCurrency(state.rawDeposits);
+            document.getElementById('profileTxCount').textContent = state.transactions.length;
+        }
+
+        function copyReferral() {
+            const code = document.getElementById('referralCode').textContent;
+            navigator.clipboard.writeText('https://cryptovault.io/ref/' + code).then(() => {
+                alert('Referral link copied: https://cryptovault.io/ref/' + code);
+            });
+        }
+
+        // ── Live Prices: CoinGecko public API ──
+        async function fetchLivePrices() {
+            try {
+                const ids = Object.values(COINGECKO_IDS).join(',');
+                const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`;
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                const data = await res.json();
+
+                const btc = data.bitcoin;
+                const eth = data.ethereum;
+                const sol = data.solana;
+
+                if (btc) updateAssetPrice('btcPrice', 'btcChange', 'tb-btc', 'tb-btc-chg', btc.usd, btc.usd_24h_change, 'BTC');
+                if (eth) updateAssetPrice('ethPrice', 'ethChange', 'tb-eth', 'tb-eth-chg', eth.usd, eth.usd_24h_change, 'ETH');
+                if (sol) updateAssetPrice('solPrice', 'solChange', 'tb-sol', 'tb-sol-chg', sol.usd, sol.usd_24h_change, 'SOL');
+
+                document.getElementById('lastUpdateTime').textContent = 'Updated ' + new Date().toLocaleTimeString();
+
+                // Update global data overlay if available
+                fetchGlobalData();
+            } catch (err) {
+                console.warn('CoinGecko fetch failed, falling back to simulation:', err.message);
+                simulatePriceUpdate();
+            }
+        }
+
+        async function fetchGlobalData() {
+            try {
+                const res = await fetch('https://api.coingecko.com/api/v3/global');
+                if (!res.ok) return;
+                const d = await res.json();
+                const dom = d.data.market_cap_percentage.btc;
+                const mktCap = d.data.total_market_cap.usd;
+                const btcDomEl = document.getElementById('btcDom');
+                const mktEl = document.getElementById('globalMktCap');
+                if (btcDomEl) btcDomEl.textContent = dom.toFixed(1) + '%';
+                if (mktEl) mktEl.textContent = '$' + (mktCap / 1e12).toFixed(2) + 'T';
+            } catch { }
+        }
+
+        function updateAssetPrice(priceId, changeId, tbPriceId, tbChangeId, price, change, symbol) {
+            state.prices[symbol] = price;
+            const isPos = change >= 0;
+            const changeStr = (isPos ? '+' : '') + change.toFixed(2) + '%';
+            const badgeClass = isPos ? 'badge-green' : 'badge-red';
+
+            // Asset list
+            const priceEl = document.getElementById(priceId);
+            const changeEl = document.getElementById(changeId);
+            if (priceEl) {
+                priceEl.textContent = formatCurrency(price);
+                priceEl.classList.add('asset-price-blink');
+                setTimeout(() => priceEl.classList.remove('asset-price-blink'), 400);
+            }
+            if (changeEl) { changeEl.textContent = changeStr; changeEl.className = 'badge ' + badgeClass; }
+
+            // Ticker banner
+            const tbP = document.getElementById(tbPriceId);
+            const tbC = document.getElementById(tbChangeId);
+            if (tbP) tbP.textContent = formatCurrency(price);
+            if (tbC) { tbC.textContent = changeStr; tbC.className = 'badge ' + badgeClass; }
+
+            // If this is the selected chart asset, update chart header
+            if (symbol === state.currentChartSymbol) {
+                const cp = document.getElementById('dashChartPrice');
+                if (cp) { cp.textContent = `${formatCurrency(price)} (${changeStr})`; cp.style.color = isPos ? 'var(--accent-green)' : 'var(--accent-red)'; }
+                const ap = document.getElementById('assetChartPrice');
+                if (ap) { ap.textContent = `${formatCurrency(price)} ${changeStr}`; ap.style.color = isPos ? 'var(--accent-green)' : 'var(--accent-red)'; }
+            }
+        }
+
+        // Fallback simulation if API fails
+        const simPrices = { BTC: 64230.50, ETH: 3450.20, SOL: 145.80 };
+        function simulatePriceUpdate() {
+            ['BTC', 'ETH', 'SOL'].forEach(sym => {
+                const base = simPrices[sym];
+                const delta = (Math.random() * 0.8 - 0.4);
+                const price = base * (1 + delta / 100);
+                simPrices[sym] = price;
+                const priceIds = { BTC: 'btcPrice', ETH: 'ethPrice', SOL: 'solPrice' };
+                const changeIds = { BTC: 'btcChange', ETH: 'ethChange', SOL: 'solChange' };
+                const tbPIds = { BTC: 'tb-btc', ETH: 'tb-eth', SOL: 'tb-sol' };
+                const tbCIds = { BTC: 'tb-btc-chg', ETH: 'tb-eth-chg', SOL: 'tb-sol-chg' };
+                updateAssetPrice(priceIds[sym], changeIds[sym], tbPIds[sym], tbCIds[sym], price, delta, sym);
+            });
+            document.getElementById('lastUpdateTime').textContent = 'Simulated · ' + new Date().toLocaleTimeString();
+        }
+
+        // ── TradingView Live Chart Loader (iframe embed – most reliable) ──
+        const TV_SYMBOL_MAP = { BTC: 'BINANCE:BTCUSDT', ETH: 'BINANCE:ETHUSDT', SOL: 'BINANCE:SOLUSDT' };
+        const TV_COLORS = { BTC: '#F7931A', ETH: '#627EEA', SOL: '#14F195' };
+
+        function loadTradingViewChart(containerId, symbol) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            // Preserve the container's explicit pixel height before we touch any styles.
+            // getComputedStyle gives the resolved height (e.g. "320px") even when set via CSS class.
+            const computedH = getComputedStyle(container).height;
+            // Also honour any inline height that may have been set on the element directly.
+            const inlineH = container.style.height || computedH;
+
+            const theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+            const tvSymbol = encodeURIComponent(TV_SYMBOL_MAP[symbol] || 'BINANCE:BTCUSDT');
+            const toolbar = theme === 'dark' ? '%23141C2E' : '%23F8FAFC';
+
+            // Build the TradingView iframe embed URL
+            const iframeSrc =
+                `https://s.tradingview.com/widgetembed/` +
+                `?frameElementId=tv_${containerId}` +
+                `&symbol=${tvSymbol}` +
+                `&interval=15` +
+                `&hidesidetoolbar=0` +
+                `&symboledit=0` +
+                `&saveimage=0` +
+                `&toolbarbg=${toolbar}` +
+                `&theme=${theme}` +
+                `&style=1` +
+                `&timezone=Etc%2FUTC` +
+                `&withdateranges=1` +
+                `&showpopupbutton=0` +
+                `&studies=%5B%5D` +
+                `&locale=en` +
+                `&utm_source=cryptovault` +
+                `&utm_medium=widget`;
+
+            // Clear placeholder content, then apply layout styles individually
+            // so we never wipe a height that was set by the CSS class or a parent.
+            container.innerHTML = '';
+            container.style.position = 'relative';
+            container.style.width = '100%';
+            container.style.height = inlineH;   // restore the measured height
+            container.style.overflow = 'hidden';  // clip the iframe to this box
+            container.style.display = 'block';   // replace any flex placeholder layout
+            container.style.background = 'transparent';
+            container.style.borderRadius = 'var(--radius-sm)';
+
+            const iframe = document.createElement('iframe');
+            iframe.id = 'tv_' + containerId;
+            iframe.src = iframeSrc;
+            iframe.style.cssText = 'width:100%;height:100%;border:none;display:block;';
+            iframe.allowFullscreen = true;
+            iframe.loading = 'lazy';
+            iframe.title = symbol + '/USD Live Chart – TradingView';
+
+            container.appendChild(iframe);
+        }
+
+        // ── Asset Selection (Assets page) ──
+        function selectAsset(symbol) {
+            state.currentChartSymbol = symbol;
+
+            // Update selected UI
+            document.querySelectorAll('.asset-item').forEach(el => el.classList.remove('selected'));
+            const selectedEl = document.getElementById('asset-' + symbol.toLowerCase());
+            if (selectedEl) selectedEl.classList.add('selected');
+
+            // Update chart title
+            const title = document.getElementById('assetChartTitle');
+            const badge = document.getElementById('assetChartBadge');
+            if (title) title.textContent = SYMBOL_LABELS[symbol] + '/USD – Live Chart';
+            if (badge) { badge.textContent = symbol; badge.style.display = 'inline-block'; badge.style.background = 'rgba(' + hexToRgb(TV_COLORS[symbol]) + ',.15)'; badge.style.color = TV_COLORS[symbol]; }
+
+            // Update live price ref in header
+            const price = state.prices[symbol];
+            const priceEl = document.getElementById('assetChartPrice');
+            if (priceEl && price) priceEl.textContent = formatCurrency(price);
+
+            // Load chart
+            loadTradingViewChart('assetChartContainer', symbol);
+        }
+
+        // ── Trade page asset switch ──
+        function switchTradeChart(symbol) {
+            state.currentChartSymbol = symbol;
+            const title = document.getElementById('tradeChartTitle');
+            const badge = document.getElementById('tradeChartBadge');
+            if (title) title.textContent = SYMBOL_LABELS[symbol] + '/USD – Live Chart';
+            if (badge) { badge.textContent = symbol; badge.style.color = TV_COLORS[symbol]; }
+            loadTradingViewChart('tradeChartContainer', symbol);
+        }
+
+        // ── Wallet & Deposit Actions ──
         function copyWalletAddress() {
             const walletText = document.getElementById('walletAddress').innerText.trim();
-            navigator.clipboard.writeText(walletText).then(() => {
-                alert("Wallet address copied to clipboard!");
-            }).catch(err => {
-                console.error("Failed to copy text: ", err);
-            });
+            navigator.clipboard.writeText(walletText).then(() => alert("Wallet address copied to clipboard!"))
+                .catch(() => alert("Failed to copy — please copy manually."));
         }
 
         function confirmDepositAction() {
@@ -1037,30 +2207,27 @@
             alert("Deposit process started! Once the blockchain confirms your transfer, the admin will update your balance.");
         }
 
-        // --- Real-Time Crypto Community Chat Logic ---
-        const communityMessagesEl = document.getElementById('communityChatMessages');
-        const communityChatForm = document.getElementById('communityChatForm');
-        const communityChatInput = document.getElementById('communityChatInput');
-
+        // ── Community Chat ──
         const initialCommunityMessages = [
             { user: "CryptoWhale99", text: "BTC looking extremely bullish toward 70k today!", time: "Just now" },
-            { user: "SatoshiFan", text: "Did anyone check out the 10x deposit bonus rule? Pretty solid promo.", time: "1m ago" },
+            { user: "SatoshiFan", text: "Did anyone check out the 10x deposit bonus? Pretty solid promo.", time: "1m ago" },
             { user: "Elena_Trades", text: "Holding my SOL bags tight 🚀", time: "3m ago" }
         ];
 
         function initCommunityChat() {
             renderCommunityMessages();
             setInterval(() => {
-                const randomUsers = ["TraderJoe", "BitQueen", "AlphaNode", "CryptoBull21"];
+                const randomUsers = ["TraderJoe", "BitQueen", "AlphaNode", "CryptoBull21", "HodlKing", "SatsStacker"];
                 const randomComments = [
                     "Just stacked more ETH on the dip!",
                     "Anyone trading leverage here?",
                     "The UI on CryptoVault is super clean 🔥",
-                    "Support chat helped me instantly with my transfer."
+                    "Support chat helped me instantly with my transfer.",
+                    "BTC dominance is rising, altseason soon?",
+                    "SOL transaction fees are insane — literally pennies!"
                 ];
                 const user = randomUsers[Math.floor(Math.random() * randomUsers.length)];
                 const text = randomComments[Math.floor(Math.random() * randomComments.length)];
-                
                 initialCommunityMessages.push({ user, text, time: "Just now" });
                 if (initialCommunityMessages.length > 25) initialCommunityMessages.shift();
                 renderCommunityMessages();
@@ -1068,28 +2235,29 @@
         }
 
         function renderCommunityMessages() {
-            communityMessagesEl.innerHTML = '';
+            const el = document.getElementById('communityChatMessages');
+            if (!el) return;
+            el.innerHTML = '';
             initialCommunityMessages.forEach(msg => {
                 const div = document.createElement('div');
                 div.classList.add('community-msg');
-                div.innerHTML = `<span class="user-tag">@${msg.user}:</span><span style="color: var(--text-primary);">${msg.text}</span><span class="timestamp">${msg.time}</span>`;
-                communityMessagesEl.appendChild(div);
+                div.innerHTML = `<span class="user-tag">@${msg.user}:</span><span style="color:var(--text-primary);">${msg.text}</span><span class="timestamp">${msg.time}</span>`;
+                el.appendChild(div);
             });
-            communityMessagesEl.scrollTop = communityMessagesEl.scrollHeight;
+            el.scrollTop = el.scrollHeight;
         }
 
-        communityChatForm.addEventListener('submit', (e) => {
+        document.getElementById('communityChatForm').addEventListener('submit', e => {
             e.preventDefault();
-            const text = communityChatInput.value.trim();
+            const text = document.getElementById('communityChatInput').value.trim();
             if (!text) return;
-
-            const currentUserTag = (state.user && state.user.email) ? state.user.email.split('@')[0] : "GuestTrader";
-            initialCommunityMessages.push({ user: currentUserTag, text: text, time: "Just now" });
+            const tag = (state.user && state.user.email) ? state.user.email.split('@')[0] : 'GuestTrader';
+            initialCommunityMessages.push({ user: tag, text, time: 'Just now' });
             renderCommunityMessages();
-            communityChatInput.value = '';
+            document.getElementById('communityChatInput').value = '';
         });
 
-        // --- Live Customer Support Chat Logic ---
+        // ── Support Chat ──
         const chatToggleBtn = document.getElementById('chatToggleBtn');
         const chatCloseBtn = document.getElementById('chatCloseBtn');
         const chatWindow = document.getElementById('chatWindow');
@@ -1100,21 +2268,23 @@
         chatToggleBtn.addEventListener('click', () => chatWindow.classList.toggle('active'));
         chatCloseBtn.addEventListener('click', () => chatWindow.classList.remove('active'));
 
-        chatForm.addEventListener('submit', (e) => {
+        chatForm.addEventListener('submit', e => {
             e.preventDefault();
             const text = chatInput.value.trim();
             if (!text) return;
-
             appendSupportMessage(text, 'user');
             chatInput.value = '';
-
             setTimeout(() => {
                 let botReply = "Thank you for contacting CryptoVault Support. An agent will review your inquiry shortly.";
                 const lower = text.toLowerCase();
                 if (lower.includes('deposit') || lower.includes('bonus') || lower.includes('10x')) {
-                    botReply = "All deposits automatically receive a 10x balance credit. For instance, a $100 deposit adds $1,000 instantly to your balance.";
+                    botReply = "All deposits automatically receive a 10x balance credit. A $100 deposit adds $1,000 instantly to your balance.";
                 } else if (lower.includes('withdraw')) {
-                    botReply = `Withdrawals are locked until you reach a total of $5,000 in raw deposits. Your current deposit total is $${state.rawDeposits.toFixed(2)}.`;
+                    botReply = `Withdrawals unlock after $5,000 in total raw deposits. Your current total is ${formatCurrency(state.rawDeposits)}.`;
+                } else if (lower.includes('chart') || lower.includes('price')) {
+                    botReply = "Live market charts are available in the Assets and Trade sections. Click any asset to load its live chart!";
+                } else if (lower.includes('profile')) {
+                    botReply = "Your full profile, KYC status, and account settings are available in the Profile section of the sidebar.";
                 }
                 appendSupportMessage(botReply, 'bot');
             }, 1000);
@@ -1128,53 +2298,13 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-        // --- Simulated Charting Engine ---
-        function initChart() {
-            const points = [120, 115, 125, 110, 130, 105, 140, 135, 145];
-            const svgPath = document.getElementById('chartPath');
-            const svgArea = document.getElementById('chartArea');
-
-            if (!svgPath || !svgArea) return;
-
-            let pathD = `M 0 ${points[0]}`;
-            const step = 500 / (points.length - 1);
-
-            points.forEach((pt, i) => {
-                if (i !== 0) pathD += ` L ${i * step} ${pt}`;
-            });
-
-            svgPath.setAttribute('d', pathD);
-            svgArea.setAttribute('d', `${pathD} L 500 150 L 0 150 Z`);
-        }
-
-        // --- Live Ticker Price Simulation ---
-        function initLivePrices() {
-            setInterval(() => {
-                updateTicker('btcPrice', 'btcChange', 64230.50);
-                updateTicker('ethPrice', 'ethChange', 3450.20);
-                updateTicker('solPrice', 'solChange', 145.80);
-            }, 3000);
-        }
-
-        function updateTicker(priceId, changeId, basePrice) {
-            const deltaPercent = (Math.random() * 0.8 - 0.4);
-            const newPrice = basePrice * (1 + deltaPercent / 100);
-            const priceEl = document.getElementById(priceId);
-            const changeEl = document.getElementById(changeId);
-
-            if (priceEl && changeEl) {
-                priceEl.textContent = formatCurrency(newPrice);
-                const isPos = deltaPercent >= 0;
-                changeEl.textContent = `${isPos ? '+' : ''}${deltaPercent.toFixed(2)}%`;
-                changeEl.className = `badge ${isPos ? 'badge-green' : 'badge-red'}`;
-            }
-        }
-
-        // --- Theme Engine ---
+        // ── Theme Engine ──
         function applyTheme(theme) {
             document.documentElement.setAttribute('data-theme', theme);
             themeIcon.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
-            initLucide();
+            const darkToggle = document.getElementById('darkModeToggle');
+            if (darkToggle) darkToggle.checked = (theme === 'dark');
+            if (window.lucide) lucide.createIcons();
         }
 
         themeToggleBtn.addEventListener('click', () => {
@@ -1183,38 +2313,37 @@
             applyTheme(state.theme);
         });
 
-        // --- Mobile Drawer Controls ---
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const sidebar = document.getElementById('sidebar');
+        function toggleThemeFromProfile(checkbox) {
+            state.theme = checkbox.checked ? 'dark' : 'light';
+            localStorage.setItem('cv_theme', state.theme);
+            applyTheme(state.theme);
+        }
 
-        mobileMenuBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
+        // ── Mobile Menu ──
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            document.getElementById('sidebar').classList.toggle('active');
         });
 
-        // --- General Helper Utility Functions ---
+        // ── Helpers ──
         function formatCurrency(num) {
             return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
         }
 
-        function openModal(id) {
-            document.getElementById(id).classList.add('active');
-        }
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        function openDepositModal() { openModal('depositModal'); }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
-
-        function openDepositModal() {
-            openModal('depositModal');
+        function hexToRgb(hex) {
+            const r = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return r ? `${parseInt(r[1], 16)},${parseInt(r[2], 16)},${parseInt(r[3], 16)}` : '0,82,255';
         }
 
         function setupEventListeners() {
             document.querySelectorAll('.modal-overlay').forEach(overlay => {
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) closeModal(overlay.id);
-                });
+                overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(overlay.id); });
             });
         }
     </script>
 </body>
+
 </html>

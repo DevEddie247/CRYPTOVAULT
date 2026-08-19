@@ -953,7 +953,7 @@ body::before {
         <div class="form-viewport">
           <!-- ============ SIGN IN FORM ============ -->
           <form class="auth-form active" id="panel-signin" role="tabpanel" aria-labelledby="tab-signin" novalidate>
-            <h2 class="form-title">Welcome back, operator</h2>
+            <h2 class="form-title">Welcome back...</h2>
             <p class="form-sub">Access your trading terminal.</p>
 
             <div class="field">
@@ -983,7 +983,7 @@ body::before {
               <a href="#" class="link-muted" id="forgot-password">Forgot password?</a>
             </div>
 
-            <a href="./dashboard.html" class="btn-primary" id="signin-submit">
+            <a onclick="btnSignIn()" class="btn-primary" id="signin-submit">
                 <span class="btn-label">Enter Terminal</span>
                 <span class="btn-spinner" aria-hidden="true"></span>
             </a>
@@ -1120,13 +1120,74 @@ body::before {
    REDIRECT_DELAY_MS: how long the success screen shows before
    redirecting, in milliseconds.
 --------------------------------------------------------------------------*/
+
+// Where to set Login Credentials
 const VALID_CREDENTIALS = {
   email: 'eniolaalao722@gmail.com',
   password: '12345678'
 };
 
-const REDIRECT_URL = ''; // e.g. 'dashboard.html' or 'https://yourapp.com/home'
-const REDIRECT_DELAY_MS = 900;
+const btnSignIn = () => {
+  const idField = document.getElementById('login-id').closest('.field');
+  const idInput = document.getElementById('login-id');
+  const idError = document.getElementById('login-id-error');
+
+  const pwField = document.getElementById('login-password').closest('.field');
+  const pwInput = document.getElementById('login-password');
+  const pwError = document.getElementById('login-password-error');
+
+  let valid = true;
+
+  if (!isValidEmailOrUsername(idInput.value)) {
+    setFieldError(idField, idError, 'Enter a valid email or username.');
+    valid = false;
+  } else {
+    setFieldError(idField, idError, '');
+  }
+
+  if (pwInput.value.length < 6) {
+    setFieldError(pwField, pwError, 'Password must be at least 6 characters.');
+    valid = false;
+  } else {
+    setFieldError(pwField, pwError, '');
+  }
+
+  if (!valid) {
+    shakeCard(authCard);
+    return;
+  }
+
+  const submitBtn = document.getElementById('signin-submit');
+  setButtonLoading(submitBtn, true);
+
+  // 3-second loading state to simulate authenticating, then check
+  // the entered details against VALID_CREDENTIALS above.
+  setTimeout(() => {
+    setButtonLoading(submitBtn, false);
+
+    const enteredId = idInput.value.trim().toLowerCase();
+    const enteredPw = pwInput.value;
+    const isMatch =
+            enteredId === VALID_CREDENTIALS.email.toLowerCase() &&
+            enteredPw === VALID_CREDENTIALS.password;
+
+    if (isMatch) {
+        showSuccess2('Your terminal is initializing. Syncing market feeds…');
+    } else {
+      setFieldError(idField, idError, '');
+      setFieldError(pwField, pwError, 'Incorrect email or password.');
+      shakeCard(authCard);
+    }
+  }, 3000);
+}
+
+// const btnSignUp = () => {
+  // alert("Contact Admin to Create an Account")
+// }
+
+const REDIRECT_URL = 'index.html'; // e.g. 'dashboard.html' or 'https://yourapp.com/home'
+const REDIRECT_URL2 = 'dashboard.html'; // e.g. 'dashboard.html' or 'https://yourapp.com/home'
+const REDIRECT_DELAY_MS = 1200;
 
 /* -------------------------------------------------------------------------
    1) AMBIENT PARTICLE NETWORK (canvas)
@@ -1376,63 +1437,22 @@ function showSuccess(message) {
   }
 }
 
-/* --- Sign In form --- */
-const signinForm = document.getElementById('panel-signin');
-signinForm.addEventListener('submit', (e) => {
-  e.preventDefault();
+function showSuccess2(message) {
+    document.querySelectorAll('.auth-form').forEach((f) => (f.hidden = true));
+    document.querySelector('.tab-switch').style.display = 'none';
+    successMessage.textContent = message;
+    successState.hidden = false;
 
-  const idField = document.getElementById('login-id').closest('.field');
-  const idInput = document.getElementById('login-id');
-  const idError = document.getElementById('login-id-error');
-
-  const pwField = document.getElementById('login-password').closest('.field');
-  const pwInput = document.getElementById('login-password');
-  const pwError = document.getElementById('login-password-error');
-
-  let valid = true;
-
-  if (!isValidEmailOrUsername(idInput.value)) {
-    setFieldError(idField, idError, 'Enter a valid email or username.');
-    valid = false;
-  } else {
-    setFieldError(idField, idError, '');
-  }
-
-  if (pwInput.value.length < 6) {
-    setFieldError(pwField, pwError, 'Password must be at least 6 characters.');
-    valid = false;
-  } else {
-    setFieldError(pwField, pwError, '');
-  }
-
-  if (!valid) {
-    shakeCard(authCard);
-    return;
-  }
-
-  const submitBtn = document.getElementById('signin-submit');
-  setButtonLoading(submitBtn, true);
-
-  // 3-second loading state to simulate authenticating, then check
-  // the entered details against VALID_CREDENTIALS above.
-  setTimeout(() => {
-    setButtonLoading(submitBtn, false);
-
-    const enteredId = idInput.value.trim().toLowerCase();
-    const enteredPw = pwInput.value;
-    const isMatch =
-      enteredId === VALID_CREDENTIALS.email.toLowerCase() &&
-      enteredPw === VALID_CREDENTIALS.password;
-
-    if (isMatch) {
-      showSuccess('Your terminal is initializing. Syncing market feeds…');
-    } else {
-      setFieldError(idField, idError, '');
-      setFieldError(pwField, pwError, 'Incorrect email or password.');
-      shakeCard(authCard);
+    // If a redirect target is configured above, send the user there
+    // after the success screen has had a moment to show.
+    if (REDIRECT_URL2) {
+        setTimeout(() => {
+            window.location.href = REDIRECT_URL2;
+        }, REDIRECT_DELAY_MS);
     }
-  }, 3000);
-});
+}
+
+/* --- Sign In form --- */
 
 /* --- Sign Up form --- */
 const signupForm = document.getElementById('panel-signup');
@@ -1508,7 +1528,7 @@ signupForm.addEventListener('submit', (e) => {
 
   setTimeout(() => {
     setButtonLoading(submitBtn, false);
-    showSuccess('Account created. Provisioning your AI trading terminal…');
+    showSuccess('Contact Admin to Create an Account…');
   }, 1400);
 });
 
