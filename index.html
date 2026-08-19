@@ -1,1225 +1,1607 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CryptoVault | Modern Crypto Trading Platform</title>
-    <!-- Inter Font & Lucide Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <style>
-        :root {
-            /* Coinbase-inspired Dark Theme Variables */
-            --bg-main: #0A0E17;
-            --bg-card: #141C2E;
-            --bg-card-hover: #1A243B;
-            --bg-input: #0F1623;
-            --border-color: #232E48;
-            --text-primary: #FFFFFF;
-            --text-secondary: #8A99AD;
-            --accent-blue: #0052FF;
-            --accent-blue-hover: #0045D8;
-            --accent-green: #00C853;
-            --accent-green-bg: rgba(0, 200, 83, 0.12);
-            --accent-red: #FF3B30;
-            --accent-red-bg: rgba(255, 59, 48, 0.12);
-            --sidebar-width: 240px;
-            --header-height: 70px;
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --shadow-main: 0 8px 24px rgba(0, 0, 0, 0.3);
-            --transition: all 0.25s ease;
-        }
-
-        [data-theme="light"] {
-            --bg-main: #F4F6F8;
-            --bg-card: #FFFFFF;
-            --bg-card-hover: #F0F3F7;
-            --bg-input: #F8FAFC;
-            --border-color: #E2E8F0;
-            --text-primary: #0A0E17;
-            --text-secondary: #5B6B7C;
-            --shadow-main: 0 8px 24px rgba(0, 0, 0, 0.06);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            transition: background-color 0.3s ease, color 0.3s ease;
-            overflow-x: hidden;
-        }
-
-        /* --- Layout & Grid Structure --- */
-        .app-container {
-            display: flex;
-            min-height: 100vh;
-            width: 100%;
-        }
-
-        /* Sticky Header */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: var(--header-height);
-            background-color: var(--bg-card);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
-            z-index: 100;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            font-size: 1.25rem;
-            color: var(--accent-blue);
-            text-decoration: none;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        /* Desktop Sidebar */
-        .sidebar {
-            width: var(--sidebar-width);
-            background-color: var(--bg-card);
-            border-right: 1px solid var(--border-color);
-            padding: 90px 16px 24px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 90;
-            transition: transform 0.3s ease;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            border-radius: var(--radius-sm);
-            font-weight: 500;
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            color: var(--accent-blue);
-            background-color: rgba(0, 82, 255, 0.08);
-        }
-
-        /* Main Content Container */
-        .main-content {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            margin-top: var(--header-height);
-            padding: 32px;
-            max-width: 1400px;
-            width: calc(100% - var(--sidebar-width));
-        }
-
-
-
-        /* --- Components --- */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 10px 20px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border-radius: var(--radius-sm);
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .btn-primary {
-            background-color: var(--accent-blue);
-            color: #FFFFFF;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--accent-blue-hover);
-        }
-
-        .btn-secondary {
-            background-color: var(--bg-input);
-            color: var(--text-primary);
-            border: 1px solid var(--border-color);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--bg-card-hover);
-        }
-
-        .btn-disabled {
-            opacity: 0.5;
-            cursor: not-allowed !important;
-        }
-
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            padding: 24px;
-            box-shadow: var(--shadow-main);
-        }
-
-        /* Dashboard Overview */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .portfolio-header {
-            margin-bottom: 24px;
-        }
-
-        .portfolio-label {
-            font-size: 0.875rem;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-        }
-
-        .portfolio-value {
-            font-size: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .action-bar {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        /* Withdrawal Progress Bar */
-        .progress-card {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            height: 10px;
-            background-color: var(--bg-input);
-            border-radius: 5px;
-            overflow: hidden;
-            margin: 16px 0 8px 0;
-            border: 1px solid var(--border-color);
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        /* Lock Icon Tooltip */
-        .tooltip-wrapper {
-            position: relative;
-            display: inline-block;
-            width: 100%;
-        }
-
-        .tooltip-text {
-            visibility: hidden;
-            width: 200px;
-            background-color: #000;
-            color: #fff;
-            text-align: center;
-            border-radius: var(--radius-sm);
-            padding: 8px;
-            position: absolute;
-            z-index: 10;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.75rem;
-            pointer-events: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-
-        .tooltip-wrapper:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        /* Asset Table & Chart Grid */
-        .trading-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 24px;
-            margin-bottom: 32px;
-        }
-
-        .chart-container {
-            height: 300px;
-            width: 100%;
-            position: relative;
-        }
-
-        svg.chart-line {
-            width: 100%;
-            height: 100%;
-            overflow: visible;
-        }
-
-        .asset-list {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .asset-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            background-color: var(--bg-input);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-color);
-        }
-
-        .asset-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
-        }
-
-        .badge-green {
-            background-color: var(--accent-green-bg);
-            color: var(--accent-green);
-        }
-
-        .badge-red {
-            background-color: var(--accent-red-bg);
-            color: var(--accent-red);
-        }
-
-        /* Real-Time Community Chat Widget Panel */
-        .community-chat-card {
-            display: flex;
-            flex-direction: column;
-            height: 360px;
-        }
-
-        .community-chat-messages {
-            flex: 1;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            padding: 12px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-
-        .community-msg {
-            font-size: 0.85rem;
-            line-height: 1.4;
-        }
-
-        .community-msg .user-tag {
-            font-weight: 600;
-            color: var(--accent-blue);
-            margin-right: 6px;
-        }
-
-        .community-msg .timestamp {
-            font-size: 0.7rem;
-            color: var(--text-secondary);
-            margin-left: 6px;
-        }
-
-        /* History Table */
-        .table-responsive {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-        }
-
-        th, td {
-            padding: 16px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.9rem;
-        }
-
-        th {
-            color: var(--text-secondary);
-            font-weight: 500;
-        }
-
-        /* --- Modals Overlay --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.75);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 200;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            pointer-events: all;
-        }
-
-        .modal {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            width: 100%;
-            max-width: 440px;
-            padding: 32px;
-            box-shadow: var(--shadow-main);
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .modal {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 24px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 16px;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            outline: none;
-            transition: var(--transition);
-        }
-
-        .form-group input:focus {
-            border-color: var(--accent-blue);
-        }
-
-        /* --- Live Customer Support Chat --- */
-        .chat-widget {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 150;
-        }
-
-        .chat-toggle {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background-color: var(--accent-blue);
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(0, 82, 255, 0.4);
-            border: none;
-            transition: transform 0.2s ease;
-        }
-
-        .chat-toggle:hover {
-            transform: scale(1.05);
-        }
-
-        .chat-window {
-            position: absolute;
-            bottom: 70px;
-            right: 0;
-            width: 360px;
-            height: 480px;
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-main);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(10px);
-            transition: all 0.3s ease;
-        }
-
-        .chat-window.active {
-            opacity: 1;
-            pointer-events: all;
-            transform: translateY(0);
-        }
-
-        .chat-header {
-            background-color: var(--bg-input);
-            padding: 16px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 16px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .chat-bubble {
-            max-width: 80%;
-            padding: 10px 14px;
-            border-radius: var(--radius-sm);
-            font-size: 0.875rem;
-            line-height: 1.4;
-        }
-
-        .chat-bubble.bot {
-            background-color: var(--bg-input);
-            color: var(--text-primary);
-            align-self: flex-start;
-            border: 1px solid var(--border-color);
-        }
-
-        .chat-bubble.user {
-            background-color: var(--accent-blue);
-            color: #FFFFFF;
-            align-self: flex-end;
-        }
-
-        .chat-input-area {
-            padding: 12px;
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            gap: 8px;
-        }
-
-        .chat-input-area input {
-            flex: 1;
-            padding: 8px 12px;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            color: var(--text-primary);
-            outline: none;
-        }
-
-        /* --- Responsive Styles --- */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            color: var(--text-primary);
-            cursor: pointer;
-        }
-
-        @media (max-width: 992px) {
-            .dashboard-grid, .trading-grid {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                transform: translateX(-100%);
-                top: var(--header-height);
-            }
-            .sidebar.active {
-                transform: translateX(0);
-            }
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-                padding: 16px;
-            }
-            .mobile-menu-btn {
-                display: block;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .action-bar {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            .chat-window {
-                width: calc(100vw - 32px);
-                right: -8px;
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CryptoVault — AI Crypto Trading Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   CryptoVault — AI Crypto Trading Platform — Auth Page Styles
+   ========================================================================== */
+
+:root {
+  /* --- Color palette --- */
+  --bg-deep: #0B0E14;
+  --bg-panel: #121721;
+  --bg-card: rgba(18, 23, 33, 0.55);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-strong: rgba(255, 255, 255, 0.16);
+
+  --cyan: #00F2FE;
+  --blue: #4FACFE;
+  --violet: #7F00FF;
+  --magenta: #E100FF;
+
+  --text-primary: #F4F6FA;
+  --text-secondary: #8B93A7;
+  --text-muted: #5A6379;
+
+  --success: #22e0a8;
+  --danger: #FF4D6D;
+
+  --gradient-primary: linear-gradient(135deg, var(--cyan) 0%, var(--violet) 100%);
+  --gradient-primary-hover: linear-gradient(135deg, var(--blue) 0%, var(--magenta) 100%);
+  --gradient-text: linear-gradient(90deg, var(--cyan) 0%, var(--blue) 45%, var(--magenta) 100%);
+
+  /* --- Glassmorphism --- */
+  --glass-blur: 22px;
+  --glass-radius: 22px;
+  --glass-shadow: 0 8px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255,255,255,0.03) inset;
+
+  /* --- Timing --- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --t-fast: 0.18s;
+  --t-med: 0.35s;
+  --t-slow: 0.6s;
+
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ==========================================================================
+   Reset & base
+   ========================================================================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { color-scheme: dark; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: inherit; text-decoration: none; }
+
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+input { font-family: inherit; color: inherit; }
+
+svg { display: block; }
+
+/* The browser's built-in [hidden] behavior loses to any author rule that
+   sets display (e.g. svg { display:block }, .success-state { display:flex }).
+   Reassert it here so hidden elements (icons, forms, success screen) always
+   actually hide. */
+[hidden] { display: none !important; }
+
+::selection { background: rgba(0, 242, 254, 0.25); }
+
+/* Visible keyboard focus */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   Background canvas + gradient mesh
+   ========================================================================== */
+#network-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  opacity: 0.55;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: -20%;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(127, 0, 255, 0.20), transparent 40%),
+    radial-gradient(circle at 85% 15%, rgba(0, 242, 254, 0.15), transparent 38%),
+    radial-gradient(circle at 75% 85%, rgba(225, 0, 255, 0.14), transparent 42%),
+    radial-gradient(circle at 20% 85%, rgba(79, 172, 254, 0.12), transparent 40%);
+  filter: blur(60px);
+  animation: mesh-drift 22s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes mesh-drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(-2%, 2%) scale(1.06); }
+  100% { transform: translate(2%, -2%) scale(1); }
+}
+
+/* ==========================================================================
+   Page layout
+   ========================================================================== */
+.page {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  min-height: 100vh;
+  min-height: 100dvh; /* avoids jump when mobile browser chrome shows/hides */
+}
+
+/* ==========================================================================
+   Hero panel (left)
+   ========================================================================== */
+.hero-panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 5vw 4vw;
+  border-right: 1px solid var(--border-glass);
+  background: linear-gradient(180deg, rgba(18,23,33,0.3), rgba(11,14,20,0.1));
+}
+
+.hero-content { max-width: 560px; }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 3rem;
+}
+
+.brand-mark {
+  display: inline-flex;
+  filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.5));
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+}
+
+.brand-accent {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.9rem, 3vw, 2.9rem);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.2rem;
+}
+
+.gradient-text {
+  background: var(--gradient-text);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-flow 6s ease-in-out infinite;
+}
+
+@keyframes gradient-flow {
+  0%, 100% { background-position: 0% center; }
+  50% { background-position: 100% center; }
+}
+
+.hero-sub {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 440px;
+  margin-bottom: 2.5rem;
+}
+
+/* --- Ticker chips --- */
+.ticker-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-bottom: 3rem;
+}
+
+.ticker-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--border-glass);
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-family: var(--font-display);
+  animation: chip-float 4.5s ease-in-out infinite;
+  transition: border-color var(--t-med) var(--ease-out), transform var(--t-med) var(--ease-out);
+}
+
+.ticker-chip:hover {
+  border-color: var(--border-glass-strong);
+  transform: translateY(-2px);
+}
+
+.ticker-chip:nth-child(2) { animation-delay: 0.6s; }
+.ticker-chip:nth-child(3) { animation-delay: 1.2s; }
+
+@keyframes chip-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.ticker-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  flex-shrink: 0;
+}
+
+.ticker-sym { font-weight: 600; color: var(--text-primary); }
+.ticker-price { color: var(--text-secondary); }
+.ticker-gain { font-weight: 600; font-size: 0.78rem; padding: 0.15rem 0.4rem; border-radius: 6px; }
+.ticker-gain.up { color: var(--success); background: rgba(34, 224, 168, 0.1); }
+.ticker-gain.down { color: var(--danger); background: rgba(255, 77, 109, 0.1); }
+
+/* --- Hero stats --- */
+.hero-stats {
+  display: flex;
+  gap: 2.2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-glass);
+}
+
+.stat { display: flex; flex-direction: column; gap: 0.2rem; }
+
+.stat-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.35rem;
+  background: linear-gradient(90deg, var(--text-primary), var(--text-secondary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   Auth panel (right)
+   ========================================================================== */
+.auth-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  width: 100%;
+}
+
+.mobile-brand { display: none; }
+
+.auth-card {
+  width: 100%;
+  max-width: 440px;
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--border-glass);
+  border-radius: var(--glass-radius);
+  box-shadow: var(--glass-shadow);
+  padding: 2.2rem 2.2rem 2rem;
+  position: relative;
+  overflow: hidden;
+  transition: box-shadow var(--t-med) var(--ease-out);
+}
+
+.auth-card::before {
+  content: "";
+  position: absolute;
+  top: -60%;
+  left: -20%;
+  width: 140%;
+  height: 140%;
+  background: conic-gradient(from 0deg, transparent, rgba(0,242,254,0.08), transparent 30%);
+  animation: card-sheen 8s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes card-sheen {
+  to { transform: rotate(360deg); }
+}
+
+.auth-card.shake { animation: card-shake 0.45s var(--ease-out); }
+
+@keyframes card-shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-5px); }
+  40%, 60% { transform: translateX(5px); }
+}
+
+/* --- Tab switch --- */
+.tab-switch {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 1.8rem;
+  z-index: 1;
+}
+
+.tab-btn {
+  position: relative;
+  z-index: 2;
+  padding: 0.65rem 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  font-family: var(--font-display);
+  color: var(--text-secondary);
+  border-radius: 9px;
+  transition: color var(--t-med) var(--ease-out);
+}
+
+.tab-btn.active { color: var(--bg-deep); }
+
+.tab-indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: var(--gradient-primary);
+  border-radius: 9px;
+  box-shadow: 0 0 16px rgba(0, 242, 254, 0.45);
+  transition: transform var(--t-med) var(--ease-spring);
+  z-index: 1;
+}
+
+.tab-switch.signup .tab-indicator {
+  transform: translateX(100%);
+}
+
+/* --- Form viewport / crossfade --- */
+.form-viewport { position: relative; z-index: 1; }
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.auth-form:not(.active) { display: none; }
+
+.auth-form.entering {
+  animation: form-in var(--t-med) var(--ease-out);
+}
+
+@keyframes form-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.form-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: -0.4rem;
+}
+
+.form-sub {
+  color: var(--text-secondary);
+  font-size: 0.88rem;
+  margin-bottom: 0.3rem;
+}
+
+/* --- Floating label fields --- */
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.field input {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--border-glass);
+  border-radius: 11px;
+  padding: 1.05rem 0.9rem 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  transition: border-color var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out);
+}
+
+.field input::placeholder { color: transparent; }
+
+.field label {
+  position: absolute;
+  left: 0.9rem;
+  top: 0.85rem;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  transform-origin: left top;
+  transition: transform var(--t-fast) var(--ease-out), color var(--t-fast) var(--ease-out), top var(--t-fast) var(--ease-out);
+}
+
+.field:has(.eye-toggle) input {
+  padding-right: 2.75rem;
+}
+
+.field input:focus,
+.field input:not(:placeholder-shown) {
+  border-color: var(--cyan);
+  background: rgba(0, 242, 254, 0.035);
+}
+
+.field input:focus ~ label,
+.field input:not(:placeholder-shown) ~ label {
+  top: 0.4rem;
+  transform: scale(0.74);
+  color: var(--cyan);
+}
+
+.field-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 11px;
+  pointer-events: none;
+  box-shadow: 0 0 0 0 rgba(0, 242, 254, 0);
+  transition: box-shadow var(--t-fast) var(--ease-out);
+}
+
+.field input:focus ~ .field-glow {
+  box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.12), 0 0 18px rgba(0, 242, 254, 0.18);
+}
+
+.field.invalid input {
+  border-color: var(--danger);
+  animation: field-shake 0.4s var(--ease-out);
+}
+
+.field.invalid input:focus ~ .field-glow {
+  box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.14), 0 0 18px rgba(255, 77, 109, 0.2);
+}
+
+@keyframes field-shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60% { transform: translateX(4px); }
+}
+
+.field-error {
+  min-height: 1.1em;
+  font-size: 0.75rem;
+  color: var(--danger);
+  margin-top: 0.3rem;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out);
+}
+
+.field.invalid .field-error,
+.terms-check.invalid ~ .field-error {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- Password eye toggle --- */
+.eye-toggle {
+  position: absolute;
+  right: 0.75rem;
+  top: 0.72rem;
+  color: var(--text-muted);
+  padding: 0.3rem;
+  display: flex;
+  transition: color var(--t-fast) var(--ease-out);
+}
+
+.eye-toggle:hover { color: var(--cyan); }
+
+/* --- Password strength meter --- */
+.strength-meter {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
+  margin-top: -0.6rem;
+}
+
+.strength-meter span {
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  transition: background var(--t-med) var(--ease-out);
+}
+
+.strength-meter.s1 span:nth-child(1) { background: var(--danger); }
+.strength-meter.s2 span:nth-child(-n+2) { background: #FFB020; }
+.strength-meter.s3 span:nth-child(-n+3) { background: var(--blue); }
+.strength-meter.s4 span:nth-child(-n+4) { background: var(--success); }
+
+/* --- Row: remember me + forgot password --- */
+.form-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.85rem;
+  user-select: none;
+}
+
+.checkbox input { position: absolute; opacity: 0; width: 0; height: 0; }
+
+.checkbox-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  border: 1px solid var(--border-glass-strong);
+  background: rgba(255, 255, 255, 0.03);
+  flex-shrink: 0;
+  position: relative;
+  transition: border-color var(--t-fast) var(--ease-out), background var(--t-fast) var(--ease-out);
+}
+
+.checkbox-box::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 1px;
+  width: 5px;
+  height: 9px;
+  border: solid var(--bg-deep);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform var(--t-fast) var(--ease-spring);
+}
+
+.checkbox input:checked ~ .checkbox-box {
+  background: var(--gradient-primary);
+  border-color: transparent;
+}
+
+.checkbox input:checked ~ .checkbox-box::after { transform: rotate(45deg) scale(1); }
+
+.checkbox input:focus-visible ~ .checkbox-box { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+.terms-check { align-items: flex-start; line-height: 1.4; font-size: 0.82rem; }
+.terms-check .checkbox-box { margin-top: 1px; }
+
+.link-muted { color: var(--text-secondary); font-size: 0.85rem; transition: color var(--t-fast); }
+.link-muted:hover { color: var(--cyan); }
+
+.link-inline { color: var(--cyan); }
+.link-inline:hover { text-decoration: underline; }
+
+/* --- Primary button --- */
+.btn-primary {
+  position: relative;
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 12px;
+  background: var(--gradient-primary);
+  background-size: 160% 160%;
+  color: #06080D;
+  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  transition: transform var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out), background-position var(--t-med) var(--ease-out);
+  box-shadow: 0 6px 24px rgba(127, 0, 255, 0.25);
+}
+
+.btn-primary:hover {
+  background-position: 100% 50%;
+  box-shadow: 0 8px 32px rgba(0, 242, 254, 0.35), 0 8px 32px rgba(225, 0, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active { transform: translateY(0) scale(0.98); }
+
+.btn-primary.loading .btn-label { opacity: 0; }
+.btn-primary.loading { pointer-events: none; }
+
+.btn-spinner {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid rgba(6, 8, 13, 0.25);
+  border-top-color: #06080D;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity var(--t-fast) var(--ease-out);
+}
+
+.btn-primary.loading .btn-spinner {
+  opacity: 1;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- Divider --- */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  margin: 0.15rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border-glass);
+}
+
+/* --- Alt auth buttons --- */
+.alt-auth {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+}
+
+.btn-alt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 0.6rem;
+  border-radius: 11px;
+  border: 1px solid var(--border-glass);
+  background: rgba(255, 255, 255, 0.03);
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  transition: border-color var(--t-fast) var(--ease-out), transform var(--t-fast) var(--ease-out), box-shadow var(--t-fast) var(--ease-out);
+}
+
+.btn-wallet:hover {
+  border-color: rgba(127, 0, 255, 0.5);
+  box-shadow: 0 0 18px rgba(127, 0, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.btn-google:hover {
+  border-color: rgba(0, 242, 254, 0.5);
+  box-shadow: 0 0 18px rgba(0, 242, 254, 0.2);
+  transform: translateY(-2px);
+}
+
+.btn-alt.connecting { opacity: 0.6; pointer-events: none; }
+
+.btn-wallet svg { color: var(--cyan); }
+
+/* ==========================================================================
+   Success state
+   ========================================================================== */
+.success-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.9rem;
+  padding: 2rem 0.5rem;
+  animation: form-in var(--t-slow) var(--ease-out);
+}
+
+.success-ring {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 242, 254, 0.06);
+  box-shadow: 0 0 30px rgba(0, 242, 254, 0.25);
+}
+
+#success-circle {
+  stroke-dasharray: 152;
+  stroke-dashoffset: 152;
+  animation: draw-circle 0.6s var(--ease-out) forwards;
+}
+
+#success-check {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  animation: draw-check 0.4s var(--ease-out) 0.5s forwards;
+}
+
+@keyframes draw-circle { to { stroke-dashoffset: 0; } }
+@keyframes draw-check { to { stroke-dashoffset: 0; } }
+
+.success-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.success-sub { color: var(--text-secondary); font-size: 0.9rem; max-width: 320px; }
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+/* --- Tablet & below: hero panel hides, card becomes the whole page --- */
+@media (max-width: 980px) {
+  .page { grid-template-columns: 1fr; display: block; }
+  .hero-panel { display: none; }
+  .mobile-brand {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.75rem;
+  }
+  .auth-panel {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 2.75rem 1.5rem;
+    padding-top: max(2.75rem, env(safe-area-inset-top));
+    padding-bottom: max(2.75rem, env(safe-area-inset-bottom));
+  }
+  .auth-card { max-width: 460px; }
+}
+
+/* --- Phones --- */
+@media (max-width: 600px) {
+  .auth-panel { padding: 2.25rem 1.1rem; }
+  .auth-card {
+    padding: 1.75rem 1.4rem 1.6rem;
+    border-radius: 20px;
+  }
+  .brand-name { font-size: 1.05rem; }
+  .form-title { font-size: 1.25rem; }
+  .form-sub { font-size: 0.85rem; }
+  .auth-form { gap: 1.05rem; }
+
+  /* Comfortable 44px-plus tap targets */
+  .tab-btn { padding: 0.8rem 0.5rem; font-size: 0.9rem; }
+  .field input { padding: 1.1rem 0.9rem 0.6rem; font-size: 1rem; }
+  .field:has(.eye-toggle) input { padding-right: 2.75rem; }
+  .eye-toggle { top: 0.8rem; padding: 0.4rem; }
+  .btn-primary { padding: 1rem; font-size: 1rem; }
+  .btn-alt { padding: 0.85rem 0.6rem; font-size: 0.86rem; }
+  .checkbox-box { width: 20px; height: 20px; }
+
+  .form-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+  .alt-auth { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+}
+
+/* --- Small phones --- */
+@media (max-width: 380px) {
+  .auth-panel { padding: 1.75rem 0.75rem; }
+  .auth-card { padding: 1.5rem 1.1rem 1.4rem; border-radius: 18px; }
+  .form-title { font-size: 1.12rem; }
+  .alt-auth { grid-template-columns: 1fr; }
+  .field input { font-size: 0.95rem; padding: 1.05rem 0.8rem 0.55rem; }
+  .field:has(.eye-toggle) input { padding-right: 2.6rem; }
+  .btn-alt { font-size: 0.82rem; }
+  .success-title { font-size: 1.3rem; }
+}
+
+/* --- Short viewports (landscape phones, small laptops) --- */
+@media (max-height: 620px) and (max-width: 980px) {
+  .auth-panel { padding-top: 1.5rem; padding-bottom: 1.5rem; align-items: flex-start; }
+  .mobile-brand { margin-bottom: 1rem; }
+  .auth-card { padding-top: 1.4rem; padding-bottom: 1.3rem; }
+  .auth-form { gap: 0.8rem; }
+  .form-title { margin-bottom: -0.2rem; }
+  .strength-meter { margin-top: -0.3rem; }
+}
+
+/* --- Larger phones/tablets landscape: keep hero visible a bit longer --- */
+@media (min-width: 700px) and (max-width: 980px) {
+  .auth-card { max-width: 420px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  #network-canvas { display: none; }
+}
+
+</style>
 </head>
 <body>
 
+  <!-- Ambient particle network canvas -->
+  <canvas id="network-canvas" aria-hidden="true"></canvas>
 
-    <div class="app-container">
-        <!-- Header -->
-        <header class="header">
-            <div style="display: flex; align-items: center; gap: 16px;">
-                <button class="mobile-menu-btn" id="mobileMenuBtn">
-                    <i data-lucide="menu"></i>
-                </button>
-                <a href="#" class="brand">
-                    <i data-lucide="vault"></i>
-                    CryptoVault
-                </a>
-            </div>
-            
-            <div class="header-actions">
-                <button class="btn btn-secondary" id="themeToggleBtn" title="Toggle Theme">
-                    <i data-lucide="moon" id="themeIcon"></i>
-                </button>
-                <div id="userProfileNav" style="display: flex; align-items: center; gap: 12px;">
-                    <span id="userEmailDisplay" style="font-size: 0.875rem; color: var(--text-secondary);"></span>
-    
-                </div>
-            </div>
-        </header>
+  <div class="page">
 
-        <!-- Sidebar Navigation -->
-        <aside class="sidebar" id="sidebar">
-            <a href="#" class="nav-item active"><i data-lucide="layout-dashboard"></i> Dashboard</a>
-            <a href="#" class="nav-item"><i data-lucide="line-chart"></i> Trade</a>
-            <a href="#" class="nav-item"><i data-lucide="wallet"></i> Assets</a>
-            <a href="#" class="nav-item"><i data-lucide="history"></i> History</a>
-            <a href="#settingsSection" class="nav-item"><i data-lucide="settings"></i> Settings</a>
-        </aside>
+    <!-- ============ LEFT / HERO PANEL ============ -->
+    <section class="hero-panel" aria-hidden="true">
+      <div class="hero-content">
+        <div class="brand">
+          <span class="brand-mark">
+            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+              <path d="M14 1L26 7.5V20.5L14 27L2 20.5V7.5L14 1Z" stroke="url(#g1)" stroke-width="1.6"/>
+              <path d="M14 8L20 11.5V18.5L14 22L8 18.5V11.5L14 8Z" fill="url(#g1)" opacity="0.85"/>
+              <defs>
+                <linearGradient id="g1" x1="2" y1="1" x2="26" y2="27" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#00F2FE"/>
+                  <stop offset="1" stop-color="#E100FF"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+          <span class="brand-name">Crypto<span class="brand-accent">Vault</span></span>
+        </div>
 
-        <!-- Main Workspace -->
-        <main class="main-content">
-            
-            <!-- Dashboard Top Grid -->
-            <section class="dashboard-grid">
-                <!-- Balance & Actions Card -->
-                <div class="card">
-                    <div class="portfolio-header">
-                        <div class="portfolio-label">Total Portfolio Balance</div>
-                        <div class="portfolio-value" id="portfolioBalanceDisplay">$10,000.00</div>
-                    </div>
-                    
-                    <!-- Primary Coinbase Action Bar -->
-                    <div class="action-bar">
-                        <button class="btn btn-primary" onclick="openDepositModal()">
-                            <i data-lucide="arrow-down-left"></i> Deposit
-                        </button>
-                        
-                        <div class="tooltip-wrapper">
-                            <button class="btn btn-secondary btn-disabled" id="withdrawBtn" disabled>
-                                <i data-lucide="lock" id="withdrawIcon"></i> Withdraw
-                            </button>
-                            <span class="tooltip-text" id="withdrawTooltip">Deposit $5,000 target to unlock withdrawals.</span>
-                        </div>
-                        
-                        <button class="btn btn-secondary" onclick="alert('Buy/Sell interface active.')">
-                            <i data-lucide="arrow-left-right"></i> Buy/Sell
-                        </button>
-                        <button class="btn btn-secondary" onclick="alert('Transfer mechanism active.')">
-                            <i data-lucide="send"></i> Transfer
-                        </button>
-                    </div>
-                </div>
+        <h1 class="hero-title">
+          Trade smarter with<br/>
+          <span class="gradient-text">autonomous market intelligence.</span>
+        </h1>
+        <p class="hero-sub">
+          Real-time on-chain signals, predictive models, and non-custodial execution — fused into one terminal.
+        </p>
 
-                <!-- Withdrawal Progress Widget -->
-                <div class="card progress-card">
-                    <div>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <span class="portfolio-label">Withdrawal Progress</span>
-                            <i data-lucide="shield-check" style="color: var(--accent-blue);"></i>
-                        </div>
-                        <div style="font-size: 1.25rem; font-weight: 600; margin-top: 8px;" id="progressTextDisplay">
-                            $0.00 / $5,000.00
-                        </div>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-fill" id="progressBarFill"></div>
-                        </div>
-                        <p style="font-size: 0.75rem; color: var(--text-secondary);" id="progressStatusText">
-                            Deposit $5,000 cumulatively to activate instant withdrawals.
-                        </p>
-                    </div>
-                    <div style="font-size: 0.75rem; color: var(--accent-green); display: flex; align-items: center; gap: 4px; margin-top: 12px;">
-                        <i data-lucide="zap" size="14"></i> 10x Deposit Multiplier Active
-                    </div>
-                </div>
-            </section>
+        <!-- Live ticker chips -->
+        <div class="ticker-row" id="ticker-row">
+          <div class="ticker-chip" data-symbol="BTC">
+            <span class="ticker-dot"></span>
+            <span class="ticker-sym">BTC</span>
+            <span class="ticker-price">$64,281</span>
+            <span class="ticker-gain up">+2.34%</span>
+          </div>
+          <div class="ticker-chip" data-symbol="ETH">
+            <span class="ticker-dot"></span>
+            <span class="ticker-sym">ETH</span>
+            <span class="ticker-price">$3,412</span>
+            <span class="ticker-gain up">+1.12%</span>
+          </div>
+          <div class="ticker-chip" data-symbol="SOL">
+            <span class="ticker-dot"></span>
+            <span class="ticker-sym">SOL</span>
+            <span class="ticker-price">$168.90</span>
+            <span class="ticker-gain down">−0.68%</span>
+          </div>
+        </div>
 
-            <!-- Trading Overview & Real-Time Crypto Community Chat Grid -->
-            <section class="trading-grid">
-                <!-- SVG Real-Time Price Chart Container -->
-                <div class="card">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                        <div>
-                            <h3 style="font-size: 1.1rem; font-weight: 600;">BTC/USD Market View</h3>
-                            <span style="font-size: 0.8rem; color: var(--accent-green);" id="chartLivePrice">$64,230.50 (+2.4%)</span>
-                        </div>
-                        <i data-lucide="trending-up" style="color: var(--accent-green);"></i>
-                    </div>
-                    <div class="chart-container">
-                        <svg class="chart-line" viewBox="0 0 500 150" preserveAspectRatio="none">
-                            <defs>
-                                <linearGradient id="chartGradient" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="0%" stop-color="#0052FF" stop-opacity="0.4"/>
-                                    <stop offset="100%" stop-color="#0052FF" stop-opacity="0"/>
-                                </linearGradient>
-                            </defs>
-                            <path id="chartArea" d="" fill="url(#chartGradient)"/>
-                            <path id="chartPath" d="" fill="none" stroke="#0052FF" stroke-width="3"/>
-                        </svg>
-                    </div>
-                </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <span class="stat-value">2.4M+</span>
+            <span class="stat-label">Active Traders</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">$18.7B</span>
+            <span class="stat-label">Volume Routed</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">99.98%</span>
+            <span class="stat-label">Uptime</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-                <!-- Real-Time Crypto Community Chat -->
-                <div class="card community-chat-card">
-                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <i data-lucide="globe" size="16" style="color: var(--accent-blue);"></i>
-                            <h3 style="font-size: 1rem; font-weight: 600;">Live Crypto Chat</h3>
-                        </div>
-                        <span class="badge badge-green" style="font-size: 0.65rem;">● Live Feed</span>
-                    </div>
-                    <div class="community-chat-messages" id="communityChatMessages">
-                        <!-- Injected live feed messages -->
-                    </div>
-                    <form id="communityChatForm" style="display: flex; gap: 8px;">
-                        <input type="text" id="communityChatInput" placeholder="Broadcast to traders..." autocomplete="off" style="flex: 1; padding: 8px 12px; background-color: var(--bg-input); border: 1px solid var(--border-color); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.85rem; outline: none;">
-                        <button type="submit" class="btn btn-primary" style="padding: 8px 12px;"><i data-lucide="send" size="14"></i></button>
-                    </form>
-                </div>
-            </section>
+    <!-- ============ RIGHT / AUTH PANEL ============ -->
+    <section class="auth-panel">
+      <div class="auth-card" id="auth-card">
 
-            <!-- Asset Watchlist -->
-            <section class="card" style="margin-bottom: 32px;">
-                <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px;">Live Assets</h3>
-                <div class="asset-list">
-                    <div class="asset-item">
-                        <div class="asset-info">
-                            <i data-lucide="bitcoin" style="color: #F7931A;"></i>
-                            <div>
-                                <div style="font-weight: 600;">Bitcoin</div>
-                                <div style="font-size: 0.75rem; color: var(--text-secondary);">BTC</div>
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 600;" id="btcPrice">$64,230.50</div>
-                            <span class="badge badge-green" id="btcChange">+2.4%</span>
-                        </div>
-                    </div>
+        <!-- Mobile brand (shown only on small screens) -->
+        <div class="brand mobile-brand">
+          <span class="brand-mark">
+            <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+              <path d="M14 1L26 7.5V20.5L14 27L2 20.5V7.5L14 1Z" stroke="url(#g2)" stroke-width="1.6"/>
+              <path d="M14 8L20 11.5V18.5L14 22L8 18.5V11.5L14 8Z" fill="url(#g2)" opacity="0.85"/>
+              <defs>
+                <linearGradient id="g2" x1="2" y1="1" x2="26" y2="27" gradientUnits="userSpaceOnUse">
+                  <stop stop-color="#00F2FE"/>
+                  <stop offset="1" stop-color="#E100FF"/>
+                </linearGradient>
+              </defs>
+            </svg>
+          </span>
+          <span class="brand-name">Crypto<span class="brand-accent">Vault</span></span>
+        </div>
 
-                    <div class="asset-item">
-                        <div class="asset-info">
-                            <i data-lucide="coins" style="color: #627EEA;"></i>
-                            <div>
-                                <div style="font-weight: 600;">Ethereum</div>
-                                <div style="font-size: 0.75rem; color: var(--text-secondary);">ETH</div>
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 600;" id="ethPrice">$3,450.20</div>
-                            <span class="badge badge-green" id="ethChange">+1.8%</span>
-                        </div>
-                    </div>
+        <!-- Tab Switch -->
+        <div class="tab-switch" role="tablist" aria-label="Authentication mode">
+          <button class="tab-btn active" id="tab-signin" role="tab" aria-selected="true" aria-controls="panel-signin">Sign In</button>
+          <button class="tab-btn" id="tab-signup" role="tab" aria-selected="false" aria-controls="panel-signup">Create Account</button>
+          <span class="tab-indicator" id="tab-indicator" aria-hidden="true"></span>
+        </div>
 
-                    <div class="asset-item">
-                        <div class="asset-info">
-                            <i data-lucide="sun" style="color: #14F195;"></i>
-                            <div>
-                                <div style="font-weight: 600;">Solana</div>
-                                <div style="font-size: 0.75rem; color: var(--text-secondary);">SOL</div>
-                            </div>
-                        </div>
-                        <div style="text-align: right;">
-                            <div style="font-weight: 600;" id="solPrice">$145.80</div>
-                            <span class="badge badge-red" id="solChange">-0.5%</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
+        <div class="form-viewport">
+          <!-- ============ SIGN IN FORM ============ -->
+          <form class="auth-form active" id="panel-signin" role="tabpanel" aria-labelledby="tab-signin" novalidate>
+            <h2 class="form-title">Welcome back, operator</h2>
+            <p class="form-sub">Access your trading terminal.</p>
 
-            <!-- Transaction Ledger -->
-            <section class="card" style="margin-bottom: 32px;">
-                <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px;">Transaction History Ledger</h3>
-                <div class="table-responsive">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Amount Deposited</th>
-                                <th>10x Credit Added</th>
-                                <th>Timestamp</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="transactionLedgerBody">
-                            <!-- Injected dynamically -->
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- Settings Section -->
-            <section class="card" id="settingsSection">
-                <h3 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px;">User Profile & Settings</h3>
-                <div style="display: flex; gap: 24px; align-items: center; flex-wrap: wrap;">
-                    <div>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Account Status</p>
-                        <p style="font-weight: 600; color: var(--accent-green);">Verified Trader</p>
-                    </div>
-                    <div>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Base Currency</p>
-                        <p style="font-weight: 600;">USD ($)</p>
-                    </div>
-                    <div>
-                        <p style="font-size: 0.85rem; color: var(--text-secondary);">Security</p>
-                        <p style="font-weight: 600;">2FA Active</p>
-                    </div>
-                </div>
-            </section>
-        </main>
-    </div>
-
-    <!-- Deposit Info Modal -->
-    <div class="modal-overlay" id="depositModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 style="font-size: 1.25rem;">Deposit Bitcoin</h3>
-                <button class="mobile-menu-btn" onclick="closeModal('depositModal')"><i data-lucide="x"></i></button>
-            </div>
-            
-            <!-- 10x Multiplier Notice -->
-            <div style="background-color: var(--accent-green-bg); color: var(--accent-green); padding: 12px; border-radius: var(--radius-sm); font-size: 0.85rem; margin-bottom: 20px;">
-                <i data-lucide="sparkles" size="16"></i> <strong>10x Multiplier Rule Active:</strong> Any BTC amount sent to this network address will automatically be multiplied by 10 and credited to your dashboard balance.
-            </div>
-            
-            <!-- Wallet Address Display -->
-            <div style="margin-bottom: 24px;">
-                <label style="display: block; font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 8px;">Network: Bitcoin (BTC)</label>
-                <div style="background-color: var(--bg-input); border: 1px dashed var(--border-color); padding: 12px 16px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-                    <span id="walletAddress" style="font-family: monospace; font-size: 0.9rem; color: var(--text-primary); word-break: break-all;">
-                        bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh
-                    </span>
-                    <button class="btn btn-secondary" onclick="copyWalletAddress()" style="padding: 6px 12px; font-size: 0.8rem; flex-shrink: 0;">
-                        <i data-lucide="copy" size="14"></i> Copy
-                    </button>
-                </div>
+            <div class="field">
+              <input type="text" id="login-id" name="login-id" placeholder=" " autocomplete="username" required />
+              <label for="login-id">Email or Username</label>
+              <span class="field-glow"></span>
+              <span class="field-error" id="login-id-error" role="alert"></span>
             </div>
 
-            <!-- Action Button -->
-            <button type="button" class="btn btn-primary" style="width: 100%;" onclick="confirmDepositAction()">
-                Deposit Now
+            <div class="field">
+              <input type="password" id="login-password" name="login-password" placeholder=" " autocomplete="current-password" required minlength="6" />
+              <label for="login-password">Password</label>
+              <button type="button" class="eye-toggle" data-target="login-password" aria-label="Show password">
+                <svg class="icon-eye" viewBox="0 0 24 24" width="19" height="19"><path fill="currentColor" d="M12 5c-5.5 0-9.6 4.1-11 7 1.4 2.9 5.5 7 11 7s9.6-4.1 11-7c-1.4-2.9-5.5-7-11-7zm0 11.5A4.5 4.5 0 1 1 16.5 12 4.5 4.5 0 0 1 12 16.5zm0-7A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5z"/></svg>
+                <svg class="icon-eye-off" viewBox="0 0 24 24" width="19" height="19" hidden><path fill="currentColor" d="M2 4.3 3.3 3l18 18-1.3 1.3-3.3-3.3A12.4 12.4 0 0 1 12 20c-5.5 0-9.6-4.1-11-7a15.6 15.6 0 0 1 4.4-5.6L2 4.3zM12 8a4 4 0 0 1 4 4 3.9 3.9 0 0 1-.4 1.8L12.2 10.4A4 4 0 0 1 12 8zm0-4c5.5 0 9.6 4.1 11 7a15.4 15.4 0 0 1-3.2 4.3l-1.4-1.4A13 13 0 0 0 21 11c-1.4-2.5-4.6-5.5-9-5.5-1 0-2 .2-2.9.4L7.6 4.4A11.6 11.6 0 0 1 12 4z"/></svg>
+              </button>
+              <span class="field-glow"></span>
+              <span class="field-error" id="login-password-error" role="alert"></span>
+            </div>
+
+            <div class="form-row">
+              <label class="checkbox">
+                <input type="checkbox" id="remember-me" name="remember-me" />
+                <span class="checkbox-box"></span>
+                Remember me
+              </label>
+              <a href="#" class="link-muted" id="forgot-password">Forgot password?</a>
+            </div>
+
+            <a href="./dashboard.html" class="btn-primary" id="signin-submit">
+                <span class="btn-label">Enter Terminal</span>
+                <span class="btn-spinner" aria-hidden="true"></span>
+            </a>
+
+            <div class="divider"><span>or continue with</span></div>
+
+            <div class="alt-auth">
+              <button type="button" class="btn-alt btn-wallet" id="connect-wallet">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 7H4a1 1 0 0 0-1 1v9a2 2 0 0 0 2 2h16a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="1.6"/><path d="M3 8V6a2 2 0 0 1 2-2h11" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="13" r="1.4" fill="currentColor"/></svg>
+                Connect Wallet
+              </button>
+              <button type="button" class="btn-alt btn-google" id="google-signin">
+                <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 4.5 29.5 2.5 24 2.5 12.4 2.5 3 11.9 3 23.5S12.4 44.5 24 44.5 45 35.1 45 23.5c0-1-.1-1.7-.4-3z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.5 6.5 29.5 4.5 24 4.5c-7.7 0-14.3 4.4-17.7 10.2z"/><path fill="#4CAF50" d="M24 44.5c5.4 0 10.3-1.8 14.1-5l-6.5-5.5c-2 1.4-4.6 2.3-7.6 2.3-5.3 0-9.7-3.4-11.3-8.1l-6.6 5.1C9.6 40 16.3 44.5 24 44.5z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.5l6.5 5.5C41.5 35.8 45 30.1 45 23.5c0-1-.1-1.7-.4-3z"/></svg>
+                Google
+              </button>
+            </div>
+          </form>
+
+          <!-- ============ SIGN UP FORM ============ -->
+          <form class="auth-form" id="panel-signup" role="tabpanel" aria-labelledby="tab-signup" novalidate hidden>
+            <h2 class="form-title">Initialize your account</h2>
+            <p class="form-sub">Join the autonomous trading network.</p>
+
+            <div class="field">
+              <input type="text" id="signup-name" name="signup-name" placeholder=" " autocomplete="name" required />
+              <label for="signup-name">Full Name</label>
+              <span class="field-glow"></span>
+              <span class="field-error" id="signup-name-error" role="alert"></span>
+            </div>
+
+            <div class="field">
+              <input type="email" id="signup-email" name="signup-email" placeholder=" " autocomplete="email" required />
+              <label for="signup-email">Email Address</label>
+              <span class="field-glow"></span>
+              <span class="field-error" id="signup-email-error" role="alert"></span>
+            </div>
+
+            <div class="field">
+              <input type="password" id="signup-password" name="signup-password" placeholder=" " autocomplete="new-password" required minlength="8" />
+              <label for="signup-password">Password</label>
+              <button type="button" class="eye-toggle" data-target="signup-password" aria-label="Show password">
+                <svg class="icon-eye" viewBox="0 0 24 24" width="19" height="19"><path fill="currentColor" d="M12 5c-5.5 0-9.6 4.1-11 7 1.4 2.9 5.5 7 11 7s9.6-4.1 11-7c-1.4-2.9-5.5-7-11-7zm0 11.5A4.5 4.5 0 1 1 16.5 12 4.5 4.5 0 0 1 12 16.5zm0-7A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5z"/></svg>
+                <svg class="icon-eye-off" viewBox="0 0 24 24" width="19" height="19" hidden><path fill="currentColor" d="M2 4.3 3.3 3l18 18-1.3 1.3-3.3-3.3A12.4 12.4 0 0 1 12 20c-5.5 0-9.6-4.1-11-7a15.6 15.6 0 0 1 4.4-5.6L2 4.3zM12 8a4 4 0 0 1 4 4 3.9 3.9 0 0 1-.4 1.8L12.2 10.4A4 4 0 0 1 12 8zm0-4c5.5 0 9.6 4.1 11 7a15.4 15.4 0 0 1-3.2 4.3l-1.4-1.4A13 13 0 0 0 21 11c-1.4-2.5-4.6-5.5-9-5.5-1 0-2 .2-2.9.4L7.6 4.4A11.6 11.6 0 0 1 12 4z"/></svg>
+              </button>
+              <span class="field-glow"></span>
+              <span class="field-error" id="signup-password-error" role="alert"></span>
+            </div>
+
+            <div class="strength-meter" id="strength-meter" aria-hidden="true">
+              <span></span><span></span><span></span><span></span>
+            </div>
+
+            <div class="field">
+              <input type="password" id="signup-confirm" name="signup-confirm" placeholder=" " autocomplete="new-password" required />
+              <label for="signup-confirm">Confirm Password</label>
+              <button type="button" class="eye-toggle" data-target="signup-confirm" aria-label="Show password">
+                <svg class="icon-eye" viewBox="0 0 24 24" width="19" height="19"><path fill="currentColor" d="M12 5c-5.5 0-9.6 4.1-11 7 1.4 2.9 5.5 7 11 7s9.6-4.1 11-7c-1.4-2.9-5.5-7-11-7zm0 11.5A4.5 4.5 0 1 1 16.5 12 4.5 4.5 0 0 1 12 16.5zm0-7A2.5 2.5 0 1 0 14.5 12 2.5 2.5 0 0 0 12 9.5z"/></svg>
+                <svg class="icon-eye-off" viewBox="0 0 24 24" width="19" height="19" hidden><path fill="currentColor" d="M2 4.3 3.3 3l18 18-1.3 1.3-3.3-3.3A12.4 12.4 0 0 1 12 20c-5.5 0-9.6-4.1-11-7a15.6 15.6 0 0 1 4.4-5.6L2 4.3zM12 8a4 4 0 0 1 4 4 3.9 3.9 0 0 1-.4 1.8L12.2 10.4A4 4 0 0 1 12 8zm0-4c5.5 0 9.6 4.1 11 7a15.4 15.4 0 0 1-3.2 4.3l-1.4-1.4A13 13 0 0 0 21 11c-1.4-2.5-4.6-5.5-9-5.5-1 0-2 .2-2.9.4L7.6 4.4A11.6 11.6 0 0 1 12 4z"/></svg>
+              </button>
+              <span class="field-glow"></span>
+              <span class="field-error" id="signup-confirm-error" role="alert"></span>
+            </div>
+
+            <label class="checkbox terms-check">
+              <input type="checkbox" id="terms-agree" name="terms-agree" required />
+              <span class="checkbox-box"></span>
+              I agree to the <a href="#" class="link-inline">Terms of Service</a> &amp; <a href="#" class="link-inline">Privacy Policy</a>
+            </label>
+            <span class="field-error" id="terms-error" role="alert"></span>
+
+            <button type="submit" class="btn-primary" id="signup-submit">
+              <span class="btn-label">Create Account</span>
+              <span class="btn-spinner" aria-hidden="true"></span>
             </button>
-        </div>
-    </div>
 
-    <!-- Customer Support Floating Chat Widget -->
-    <div class="chat-widget">
-        <button class="chat-toggle" id="chatToggleBtn">
-            <i data-lucide="message-square"></i>
-        </button>
-        <div class="chat-window" id="chatWindow">
-            <div class="chat-header">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <i data-lucide="bot" style="color: var(--accent-blue);"></i>
-                    <span style="font-weight: 600; font-size: 0.9rem;">CryptoVault Support</span>
-                </div>
-                <button class="mobile-menu-btn" id="chatCloseBtn"><i data-lucide="x"></i></button>
+            <div class="divider"><span>or continue with</span></div>
+
+            <div class="alt-auth">
+              <button type="button" class="btn-alt btn-wallet" id="connect-wallet-2">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M21 7H4a1 1 0 0 0-1 1v9a2 2 0 0 0 2 2h16a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1z" stroke="currentColor" stroke-width="1.6"/><path d="M3 8V6a2 2 0 0 1 2-2h11" stroke="currentColor" stroke-width="1.6"/><circle cx="17" cy="13" r="1.4" fill="currentColor"/></svg>
+                Connect Wallet
+              </button>
+              <button type="button" class="btn-alt btn-google" id="google-signup">
+                <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 8 3l6-6C34.5 4.5 29.5 2.5 24 2.5 12.4 2.5 3 11.9 3 23.5S12.4 44.5 24 44.5 45 35.1 45 23.5c0-1-.1-1.7-.4-3z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.8 1.1 8 3l6-6C34.5 6.5 29.5 4.5 24 4.5c-7.7 0-14.3 4.4-17.7 10.2z"/><path fill="#4CAF50" d="M24 44.5c5.4 0 10.3-1.8 14.1-5l-6.5-5.5c-2 1.4-4.6 2.3-7.6 2.3-5.3 0-9.7-3.4-11.3-8.1l-6.6 5.1C9.6 40 16.3 44.5 24 44.5z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.3 4.2-4.2 5.5l6.5 5.5C41.5 35.8 45 30.1 45 23.5c0-1-.1-1.7-.4-3z"/></svg>
+                Google
+              </button>
             </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="chat-bubble bot">
-                    Hello! Welcome to CryptoVault. How can I assist you with your portfolio or deposits today?
-                </div>
+          </form>
+
+          <!-- ============ SUCCESS STATE ============ -->
+          <div class="success-state" id="success-state" hidden>
+            <div class="success-ring">
+              <svg viewBox="0 0 52 52" width="56" height="56">
+                <circle cx="26" cy="26" r="24" fill="none" stroke="url(#g3)" stroke-width="2.5" id="success-circle"/>
+                <path fill="none" stroke="url(#g3)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" d="M15 27l7 7 15-15" id="success-check"/>
+                <defs>
+                  <linearGradient id="g3" x1="0" y1="0" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#00F2FE"/>
+                    <stop offset="1" stop-color="#E100FF"/>
+                  </linearGradient>
+                </defs>
+              </svg>
             </div>
-            <form class="chat-input-area" id="chatForm">
-                <input type="text" id="chatInput" placeholder="Type a message..." autocomplete="off">
-                <button type="submit" class="btn btn-primary" style="padding: 8px 12px;"><i data-lucide="send" size="16"></i></button>
-            </form>
+            <h2 class="success-title">Welcome to CryptoVault</h2>
+            <p class="success-sub" id="success-message">Your terminal is initializing. Syncing market feeds…</p>
+          </div>
         </div>
-    </div>
+      </div>
+    </section>
+  </div>
 
-    <!-- Core Application Logic -->
-    <script>
-        // --- 1. EDIT YOUR DEPOSITS HERE ---
-        const myDeposits = [
-            { amount: 1000, date: "8/18/2026, 10:30:00 AM" },
-            { amount: 200, date: "8/18/2026, 01:15:00 PM" }
-        ];
-        // ----------------------------------
+  <script>
+/* ==========================================================================
+   CryptoVault — Auth Page Logic
+   Sections: 0) Login credentials config  1) Particle network canvas
+             2) Tab switch  3) Password toggles  4) Validation
+             5) Form submit / success state  6) Ticker updates
+   ========================================================================== */
 
-        const TARGET_WITHDRAWAL_DEPOSIT = 5000.00;
-        const BASE_BALANCE = 10000.00;
+/* -------------------------------------------------------------------------
+   0) LOGIN CREDENTIALS + REDIRECT TARGET
+   Edit these any time — nothing else in this file needs to change.
 
-        // --- 2. AUTOMATIC CALCULATION ENGINE ---
-        let calculatedRawDeposits = 0;
-        let totalCreditedBonus = 0;
-        let formattedTransactions = [];
+   VALID_CREDENTIALS: who is allowed to sign in (email check is
+   case-insensitive).
 
-        myDeposits.forEach((dep, index) => {
-            let creditedAmt = dep.amount * 10;
-            calculatedRawDeposits += dep.amount;
-            totalCreditedBonus += creditedAmt;
-            
-            formattedTransactions.push({
-                id: index,
-                rawAmount: dep.amount,
-                creditedAmount: creditedAmt,
-                timestamp: dep.date
-            });
-        });
+   REDIRECT_URL: where CryptoVault sends the user after a successful
+   Sign In. Point this at your dashboard/app page, e.g.
+     'dashboard.html'                  (a file next to this one)
+     'https://app.yoursite.com/home'   (a full URL, any domain)
+   Leave it as '' (empty string) to just show the in-page success
+   screen with no redirect.
 
-        // --- 3. STATE MANAGEMENT ---
-        let state = {
-            user: JSON.parse(localStorage.getItem('cv_user')) || null,
-            rawDeposits: calculatedRawDeposits,
-            totalBalance: BASE_BALANCE + totalCreditedBonus,
-            transactions: formattedTransactions,
-            theme: localStorage.getItem('cv_theme') || 'dark',
-            pageAuthMode: 'signin'
-        };
+   REDIRECT_DELAY_MS: how long the success screen shows before
+   redirecting, in milliseconds.
+--------------------------------------------------------------------------*/
+const VALID_CREDENTIALS = {
+  email: 'eniolaalao722@gmail.com',
+  password: '12345678'
+};
 
-        // --- DOM Selectors ---
-        const portfolioBalanceDisplay = document.getElementById('portfolioBalanceDisplay');
-        const progressTextDisplay = document.getElementById('progressTextDisplay');
-        const progressBarFill = document.getElementById('progressBarFill');
-        const withdrawBtn = document.getElementById('withdrawBtn');
-        const withdrawIcon = document.getElementById('withdrawIcon');
-        const withdrawTooltip = document.getElementById('withdrawTooltip');
-        const transactionLedgerBody = document.getElementById('transactionLedgerBody');
-        const themeToggleBtn = document.getElementById('themeToggleBtn');
-        const themeIcon = document.getElementById('themeIcon');
+const REDIRECT_URL = ''; // e.g. 'dashboard.html' or 'https://yourapp.com/home'
+const REDIRECT_DELAY_MS = 900;
 
-        // --- Initialize Application ---
-        document.addEventListener('DOMContentLoaded', () => {
-            initLucide();
-            applyTheme(state.theme);
-            updateUI();
-            initChart();
-            initLivePrices();
-            setupEventListeners();
-            initCommunityChat();
-        });
+/* -------------------------------------------------------------------------
+   1) AMBIENT PARTICLE NETWORK (canvas)
+   Nodes drift slowly and draw a line between any two that are close enough,
+   giving an "AI network" feel. Reacts subtly to the pointer.
+--------------------------------------------------------------------------*/
+(function initNetworkCanvas() {
+  const canvas = document.getElementById('network-canvas');
+  if (!canvas) return;
 
-        function initLucide() {
-            if (window.lucide) {
-                lucide.createIcons();
-            }
+  const ctx = canvas.getContext('2d');
+  let width, height, dpr;
+  let nodes = [];
+  const pointer = { x: null, y: null };
+
+  const NODE_COUNT_DIVISOR = 14000; // fewer nodes on small screens
+  const MAX_LINK_DIST = 150;
+  const POINTER_RADIUS = 180;
+
+  function resize() {
+    dpr = window.devicePixelRatio || 1;
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+    canvas.style.width = width + 'px';
+    canvas.style.height = height + 'px';
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    buildNodes();
+  }
+
+  function buildNodes() {
+    const count = Math.min(90, Math.floor((width * height) / NODE_COUNT_DIVISOR));
+    nodes = Array.from({ length: count }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: (Math.random() - 0.5) * 0.25,
+      r: Math.random() * 1.4 + 0.6
+    }));
+  }
+
+  function step() {
+    ctx.clearRect(0, 0, width, height);
+
+    // update positions
+    for (const n of nodes) {
+      n.x += n.vx;
+      n.y += n.vy;
+      if (n.x < 0 || n.x > width) n.vx *= -1;
+      if (n.y < 0 || n.y > height) n.vy *= -1;
+
+      // gentle pointer attraction
+      if (pointer.x !== null) {
+        const dx = pointer.x - n.x;
+        const dy = pointer.y - n.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < POINTER_RADIUS) {
+          n.x += dx * 0.0009;
+          n.y += dy * 0.0009;
         }
+      }
+    }
 
-        // --- UI Update Pipeline ---
-        function updateUI() {
-            portfolioBalanceDisplay.textContent = formatCurrency(state.totalBalance);
-            progressTextDisplay.textContent = `${formatCurrency(state.rawDeposits)} / ${formatCurrency(TARGET_WITHDRAWAL_DEPOSIT)}`;
-            const progressPercent = Math.min((state.rawDeposits / TARGET_WITHDRAWAL_DEPOSIT) * 100, 100);
-            progressBarFill.style.width = `${progressPercent}%`;
-
-            if (state.rawDeposits >= TARGET_WITHDRAWAL_DEPOSIT) {
-                withdrawBtn.classList.remove('btn-disabled');
-                withdrawBtn.removeAttribute('disabled');
-                withdrawIcon.setAttribute('data-lucide', 'arrow-up-right');
-                withdrawTooltip.textContent = "Withdrawals unlocked!";
-            } else {
-                withdrawBtn.classList.add('btn-disabled');
-                withdrawBtn.setAttribute('disabled', 'true');
-                withdrawIcon.setAttribute('data-lucide', 'lock');
-                withdrawTooltip.textContent = `Deposit ${formatCurrency(TARGET_WITHDRAWAL_DEPOSIT - state.rawDeposits)} more to unlock.`;
-            }
-
-            renderLedger();
-            initLucide();
+    // draw links
+    for (let i = 0; i < nodes.length; i++) {
+      for (let j = i + 1; j < nodes.length; j++) {
+        const dx = nodes[i].x - nodes[j].x;
+        const dy = nodes[i].y - nodes[j].y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < MAX_LINK_DIST) {
+          const alpha = (1 - dist / MAX_LINK_DIST) * 0.35;
+          ctx.strokeStyle = `rgba(79, 172, 254, ${alpha})`;
+          ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(nodes[i].x, nodes[i].y);
+          ctx.lineTo(nodes[j].x, nodes[j].y);
+          ctx.stroke();
         }
+      }
+    }
 
-        function renderLedger() {
-            transactionLedgerBody.innerHTML = '';
-            if (state.transactions.length === 0) {
-                transactionLedgerBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color: var(--text-secondary);">No deposit transactions found</td></tr>`;
-                return;
-            }
+    // draw nodes
+    for (const n of nodes) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 242, 254, 0.75)';
+      ctx.fill();
+    }
 
-            state.transactions.slice().reverse().forEach(tx => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td style="font-weight: 600;"><span style="color: var(--accent-green);">Deposit</span></td>
-                    <td>${formatCurrency(tx.rawAmount)}</td>
-                    <td style="color: var(--accent-green); font-weight: 600;">+${formatCurrency(tx.creditedAmount)}</td>
-                    <td style="color: var(--text-secondary);">${tx.timestamp}</td>
-                    <td><span class="badge badge-green">Completed</span></td>
-                `;
-                transactionLedgerBody.appendChild(tr);
-            });
-        }
+    requestAnimationFrame(step);
+  }
 
-        // --- Wallet & Deposit Actions ---
-        function copyWalletAddress() {
-            const walletText = document.getElementById('walletAddress').innerText.trim();
-            navigator.clipboard.writeText(walletText).then(() => {
-                alert("Wallet address copied to clipboard!");
-            }).catch(err => {
-                console.error("Failed to copy text: ", err);
-            });
-        }
+  window.addEventListener('resize', resize);
+  window.addEventListener('pointermove', (e) => {
+    pointer.x = e.clientX;
+    pointer.y = e.clientY;
+  });
+  window.addEventListener('pointerleave', () => {
+    pointer.x = null;
+    pointer.y = null;
+  });
 
-        function confirmDepositAction() {
-            closeModal('depositModal');
-            alert("Deposit process started! Once the blockchain confirms your transfer, the admin will update your balance.");
-        }
+  // Respect reduced motion preference
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!prefersReducedMotion) {
+    resize();
+    requestAnimationFrame(step);
+  }
+})();
 
-        // --- Storage Helpers ---
-        function saveState() {
-            localStorage.setItem('cv_rawDeposits', state.rawDeposits);
-            localStorage.setItem('cv_totalBalance', state.totalBalance);
-            localStorage.setItem('cv_transactions', JSON.stringify(state.transactions));
-            if (state.user) localStorage.setItem('cv_user', JSON.stringify(state.user));
-            else localStorage.removeItem('cv_user');
-        }
+/* -------------------------------------------------------------------------
+   2) TAB SWITCH (Sign In <-> Create Account)
+--------------------------------------------------------------------------*/
+(function initTabSwitch() {
+  const tabSignin = document.getElementById('tab-signin');
+  const tabSignup = document.getElementById('tab-signup');
+  const panelSignin = document.getElementById('panel-signin');
+  const panelSignup = document.getElementById('panel-signup');
+  const tabSwitch = document.querySelector('.tab-switch');
+  const successState = document.getElementById('success-state');
 
+  function activate(mode) {
+    // If success state is showing, hide it and restore the form area
+    if (successState && !successState.hidden) {
+      successState.hidden = true;
+    }
 
+    const showSignup = mode === 'signup';
 
-        // --- Real-Time Crypto Community Chat Logic ---
-        const communityMessagesEl = document.getElementById('communityChatMessages');
-        const communityChatForm = document.getElementById('communityChatForm');
-        const communityChatInput = document.getElementById('communityChatInput');
+    tabSwitch.classList.toggle('signup', showSignup);
 
-        const initialCommunityMessages = [
-            { user: "CryptoWhale99", text: "BTC looking extremely bullish toward 70k today!", time: "Just now" },
-            { user: "SatoshiFan", text: "Did anyone check out the 10x deposit bonus rule? Pretty solid promo.", time: "1m ago" },
-            { user: "Elena_Trades", text: "Holding my SOL bags tight 🚀", time: "3m ago" }
-        ];
+    tabSignin.classList.toggle('active', !showSignup);
+    tabSignin.setAttribute('aria-selected', String(!showSignup));
 
-        function initCommunityChat() {
-            renderCommunityMessages();
-            // Simulate incoming random global trader messages periodically
-            setInterval(() => {
-                const randomUsers = ["TraderJoe", "BitQueen", "AlphaNode", "CryptoBull21"];
-                const randomComments = [
-                    "Just stacked more ETH on the dip!",
-                    "Anyone trading leverage here?",
-                    "The UI on CryptoVault is super clean 🔥",
-                    "Support chat helped me instantly with my transfer."
-                ];
-                const user = randomUsers[Math.floor(Math.random() * randomUsers.length)];
-                const text = randomComments[Math.floor(Math.random() * randomComments.length)];
-                
-                initialCommunityMessages.push({ user, text, time: "Just now" });
-                if (initialCommunityMessages.length > 25) initialCommunityMessages.shift();
-                renderCommunityMessages();
-            }, 6000);
-        }
+    tabSignup.classList.toggle('active', showSignup);
+    tabSignup.setAttribute('aria-selected', String(showSignup));
 
-        function renderCommunityMessages() {
-            communityMessagesEl.innerHTML = '';
-            initialCommunityMessages.forEach(msg => {
-                const div = document.createElement('div');
-                div.classList.add('community-msg');
-                div.innerHTML = `<span class="user-tag">@${msg.user}:</span><span style="color: var(--text-primary);">${msg.text}</span><span class="timestamp">${msg.time}</span>`;
-                communityMessagesEl.appendChild(div);
-            });
-            communityMessagesEl.scrollTop = communityMessagesEl.scrollHeight;
-        }
+    panelSignin.hidden = showSignup;
+    panelSignup.hidden = !showSignup;
 
-        communityChatForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const text = communityChatInput.value.trim();
-            if (!text) return;
+    panelSignin.classList.toggle('active', !showSignup);
+    panelSignup.classList.toggle('active', showSignup);
 
-            const currentUserTag = state.user ? state.user.email.split('@')[0] : "GuestTrader";
-            initialCommunityMessages.push({ user: currentUserTag, text: text, time: "Just now" });
-            renderCommunityMessages();
-            communityChatInput.value = '';
-        });
+    const entering = showSignup ? panelSignup : panelSignin;
+    entering.classList.remove('entering');
+    // force reflow to restart animation
+    void entering.offsetWidth;
+    entering.classList.add('entering');
+  }
 
-        // --- Live Customer Support Chat Logic ---
-        const chatToggleBtn = document.getElementById('chatToggleBtn');
-        const chatCloseBtn = document.getElementById('chatCloseBtn');
-        const chatWindow = document.getElementById('chatWindow');
-        const chatForm = document.getElementById('chatForm');
-        const chatInput = document.getElementById('chatInput');
-        const chatMessages = document.getElementById('chatMessages');
+  tabSignin.addEventListener('click', () => activate('signin'));
+  tabSignup.addEventListener('click', () => activate('signup'));
+})();
 
-        chatToggleBtn.addEventListener('click', () => chatWindow.classList.toggle('active'));
-        chatCloseBtn.addEventListener('click', () => chatWindow.classList.remove('active'));
+/* -------------------------------------------------------------------------
+   3) PASSWORD VISIBILITY TOGGLES
+--------------------------------------------------------------------------*/
+document.querySelectorAll('.eye-toggle').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const targetId = btn.getAttribute('data-target');
+    const input = document.getElementById(targetId);
+    const iconOn = btn.querySelector('.icon-eye');
+    const iconOff = btn.querySelector('.icon-eye-off');
+    const isHidden = input.type === 'password';
 
-        chatForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const text = chatInput.value.trim();
-            if (!text) return;
+    input.type = isHidden ? 'text' : 'password';
+    iconOn.hidden = isHidden;
+    iconOff.hidden = !isHidden;
+    btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+  });
+});
 
-            appendSupportMessage(text, 'user');
-            chatInput.value = '';
+/* -------------------------------------------------------------------------
+   4) VALIDATION HELPERS
+--------------------------------------------------------------------------*/
+function setFieldError(fieldEl, errorEl, message) {
+  if (message) {
+    fieldEl.classList.add('invalid');
+    errorEl.textContent = message;
+    // restart shake animation
+    fieldEl.querySelector('input').classList.remove('shake-restart');
+  } else {
+    fieldEl.classList.remove('invalid');
+    errorEl.textContent = '';
+  }
+}
 
-            setTimeout(() => {
-                let botReply = "Thank you for contacting CryptoVault Support. An agent will review your inquiry shortly.";
-                const lower = text.toLowerCase();
-                if (lower.includes('deposit') || lower.includes('bonus') || lower.includes('10x')) {
-                    botReply = "All deposits automatically receive a 10x balance credit. For instance, a $100 deposit adds $1,000 instantly to your balance.";
-                } else if (lower.includes('withdraw')) {
-                    botReply = `Withdrawals are locked until you reach a total of $5,000 in raw deposits. Your current deposit total is $${state.rawDeposits.toFixed(2)}.`;
-                }
-                appendSupportMessage(botReply, 'bot');
-            }, 1000);
-        });
+function isValidEmailOrUsername(value) {
+  return value.trim().length >= 3;
+}
 
-        function appendSupportMessage(message, sender) {
-            const div = document.createElement('div');
-            div.classList.add('chat-bubble', sender);
-            div.textContent = message;
-            chatMessages.appendChild(div);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
 
-        // --- Simulated Charting Engine ---
-        function initChart() {
-            const points = [120, 115, 125, 110, 130, 105, 140, 135, 145];
-            const svgPath = document.getElementById('chartPath');
-            const svgArea = document.getElementById('chartArea');
+function shakeCard(cardEl) {
+  cardEl.classList.remove('shake');
+  void cardEl.offsetWidth;
+  cardEl.classList.add('shake');
+}
 
-            let pathD = `M 0 ${points[0]}`;
-            const step = 500 / (points.length - 1);
+/* Password strength: returns 0-4 */
+function scorePassword(pw) {
+  let score = 0;
+  if (pw.length >= 8) score++;
+  if (/[A-Z]/.test(pw) && /[a-z]/.test(pw)) score++;
+  if (/\d/.test(pw)) score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  return score;
+}
 
-            points.forEach((pt, i) => {
-                if (i !== 0) pathD += ` L ${i * step} ${pt}`;
-            });
+const strengthMeter = document.getElementById('strength-meter');
+const signupPasswordInput = document.getElementById('signup-password');
+if (signupPasswordInput && strengthMeter) {
+  signupPasswordInput.addEventListener('input', () => {
+    const score = scorePassword(signupPasswordInput.value);
+    strengthMeter.className = 'strength-meter' + (score > 0 ? ` s${score}` : '');
+  });
+}
 
-            svgPath.setAttribute('d', pathD);
-            svgArea.setAttribute('d', `${pathD} L 500 150 L 0 150 Z`);
-        }
+/* -------------------------------------------------------------------------
+   5) FORM SUBMISSION + SUCCESS STATE
+--------------------------------------------------------------------------*/
+const authCard = document.getElementById('auth-card');
+const successState = document.getElementById('success-state');
+const successMessage = document.getElementById('success-message');
+const formViewport = document.querySelector('.form-viewport');
 
-        // --- Live Ticker Price Simulation ---
-        function initLivePrices() {
-            setInterval(() => {
-                updateTicker('btcPrice', 'btcChange', 64230.50);
-                updateTicker('ethPrice', 'ethChange', 3450.20);
-                updateTicker('solPrice', 'solChange', 145.80);
-            }, 3000);
-        }
+function setButtonLoading(button, isLoading) {
+  button.classList.toggle('loading', isLoading);
+  button.disabled = isLoading;
+}
 
-        function updateTicker(priceId, changeId, basePrice) {
-            const deltaPercent = (Math.random() * 0.8 - 0.4);
-            const newPrice = basePrice * (1 + deltaPercent / 100);
-            const priceEl = document.getElementById(priceId);
-            const changeEl = document.getElementById(changeId);
+function showSuccess(message) {
+  document.querySelectorAll('.auth-form').forEach((f) => (f.hidden = true));
+  document.querySelector('.tab-switch').style.display = 'none';
+  successMessage.textContent = message;
+  successState.hidden = false;
 
-            if (priceEl && changeEl) {
-                priceEl.textContent = formatCurrency(newPrice);
-                const isPos = deltaPercent >= 0;
-                changeEl.textContent = `${isPos ? '+' : ''}${deltaPercent.toFixed(2)}%`;
-                changeEl.className = `badge ${isPos ? 'badge-green' : 'badge-red'}`;
-            }
-        }
+  // If a redirect target is configured above, send the user there
+  // after the success screen has had a moment to show.
+  if (REDIRECT_URL) {
+    setTimeout(() => {
+      window.location.href = REDIRECT_URL;
+    }, REDIRECT_DELAY_MS);
+  }
+}
 
-        // --- Theme Engine ---
-        function applyTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            themeIcon.setAttribute('data-lucide', theme === 'dark' ? 'sun' : 'moon');
-            initLucide();
-        }
+/* --- Sign In form --- */
+const signinForm = document.getElementById('panel-signin');
+signinForm.addEventListener('submit', (e) => {
+  e.preventDefault();
 
-        themeToggleBtn.addEventListener('click', () => {
-            state.theme = state.theme === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('cv_theme', state.theme);
-            applyTheme(state.theme);
-        });
+  const idField = document.getElementById('login-id').closest('.field');
+  const idInput = document.getElementById('login-id');
+  const idError = document.getElementById('login-id-error');
 
-        // --- Mobile Drawer Controls ---
-        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-        const sidebar = document.getElementById('sidebar');
+  const pwField = document.getElementById('login-password').closest('.field');
+  const pwInput = document.getElementById('login-password');
+  const pwError = document.getElementById('login-password-error');
 
-        mobileMenuBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
+  let valid = true;
 
-        // --- General Helper Utility Functions ---
-        function formatCurrency(num) {
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
-        }
+  if (!isValidEmailOrUsername(idInput.value)) {
+    setFieldError(idField, idError, 'Enter a valid email or username.');
+    valid = false;
+  } else {
+    setFieldError(idField, idError, '');
+  }
 
-        function openModal(id) {
-            document.getElementById(id).classList.add('active');
-        }
+  if (pwInput.value.length < 6) {
+    setFieldError(pwField, pwError, 'Password must be at least 6 characters.');
+    valid = false;
+  } else {
+    setFieldError(pwField, pwError, '');
+  }
 
-        function closeModal(id) {
-            document.getElementById(id).classList.remove('active');
-        }
+  if (!valid) {
+    shakeCard(authCard);
+    return;
+  }
 
-        function openDepositModal() {
-            openModal('depositModal');
-        }
+  const submitBtn = document.getElementById('signin-submit');
+  setButtonLoading(submitBtn, true);
 
-        function setupEventListeners() {
-            document.querySelectorAll('.modal-overlay').forEach(overlay => {
-                overlay.addEventListener('click', (e) => {
-                    if (e.target === overlay) closeModal(overlay.id);
-                });
-            });
-        }
-    </script>
-</body>f
+  // 3-second loading state to simulate authenticating, then check
+  // the entered details against VALID_CREDENTIALS above.
+  setTimeout(() => {
+    setButtonLoading(submitBtn, false);
+
+    const enteredId = idInput.value.trim().toLowerCase();
+    const enteredPw = pwInput.value;
+    const isMatch =
+      enteredId === VALID_CREDENTIALS.email.toLowerCase() &&
+      enteredPw === VALID_CREDENTIALS.password;
+
+    if (isMatch) {
+      showSuccess('Your terminal is initializing. Syncing market feeds…');
+    } else {
+      setFieldError(idField, idError, '');
+      setFieldError(pwField, pwError, 'Incorrect email or password.');
+      shakeCard(authCard);
+    }
+  }, 3000);
+});
+
+/* --- Sign Up form --- */
+const signupForm = document.getElementById('panel-signup');
+signupForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  const nameField = document.getElementById('signup-name').closest('.field');
+  const nameInput = document.getElementById('signup-name');
+  const nameError = document.getElementById('signup-name-error');
+
+  const emailField = document.getElementById('signup-email').closest('.field');
+  const emailInput = document.getElementById('signup-email');
+  const emailError = document.getElementById('signup-email-error');
+
+  const pwField = document.getElementById('signup-password').closest('.field');
+  const pwInput = document.getElementById('signup-password');
+  const pwError = document.getElementById('signup-password-error');
+
+  const confirmField = document.getElementById('signup-confirm').closest('.field');
+  const confirmInput = document.getElementById('signup-confirm');
+  const confirmError = document.getElementById('signup-confirm-error');
+
+  const termsInput = document.getElementById('terms-agree');
+  const termsCheckbox = termsInput.closest('.terms-check');
+  const termsError = document.getElementById('terms-error');
+
+  let valid = true;
+
+  if (nameInput.value.trim().length < 2) {
+    setFieldError(nameField, nameError, 'Enter your full name.');
+    valid = false;
+  } else {
+    setFieldError(nameField, nameError, '');
+  }
+
+  if (!isValidEmail(emailInput.value)) {
+    setFieldError(emailField, emailError, 'Enter a valid email address.');
+    valid = false;
+  } else {
+    setFieldError(emailField, emailError, '');
+  }
+
+  if (pwInput.value.length < 8) {
+    setFieldError(pwField, pwError, 'Password must be at least 8 characters.');
+    valid = false;
+  } else {
+    setFieldError(pwField, pwError, '');
+  }
+
+  if (confirmInput.value !== pwInput.value || confirmInput.value === '') {
+    setFieldError(confirmField, confirmError, 'Passwords do not match.');
+    valid = false;
+  } else {
+    setFieldError(confirmField, confirmError, '');
+  }
+
+  if (!termsInput.checked) {
+    termsCheckbox.classList.add('invalid');
+    termsError.textContent = 'You must agree to the terms to continue.';
+    valid = false;
+  } else {
+    termsCheckbox.classList.remove('invalid');
+    termsError.textContent = '';
+  }
+
+  if (!valid) {
+    shakeCard(authCard);
+    return;
+  }
+
+  const submitBtn = document.getElementById('signup-submit');
+  setButtonLoading(submitBtn, true);
+
+  setTimeout(() => {
+    setButtonLoading(submitBtn, false);
+    showSuccess('Account created. Provisioning your AI trading terminal…');
+  }, 1400);
+});
+
+/* --- Clear field error as the user types --- */
+document.querySelectorAll('.field input').forEach((input) => {
+  input.addEventListener('input', () => {
+    const field = input.closest('.field');
+    if (field.classList.contains('invalid')) {
+      field.classList.remove('invalid');
+      const error = field.querySelector('.field-error');
+      if (error) error.textContent = '';
+    }
+  });
+});
+
+document.getElementById('terms-agree').addEventListener('change', function () {
+  const wrap = this.closest('.terms-check');
+  if (this.checked) {
+    wrap.classList.remove('invalid');
+    document.getElementById('terms-error').textContent = '';
+  }
+});
+
+/* -------------------------------------------------------------------------
+   6) ALTERNATIVE SIGN-IN BUTTONS (Wallet / Google) — simulated connect state
+--------------------------------------------------------------------------*/
+function simulateConnect(btn, label) {
+  const original = btn.innerHTML;
+  btn.classList.add('connecting');
+  btn.innerHTML = `<span class="btn-spinner" style="position:static;width:14px;height:14px;border-width:2px;opacity:1;animation:spin 0.7s linear infinite;"></span> Connecting…`;
+
+  setTimeout(() => {
+    btn.classList.remove('connecting');
+    btn.innerHTML = original;
+    showSuccess(`${label} connected. Redirecting to your terminal…`);
+  }, 1200);
+}
+
+['connect-wallet', 'connect-wallet-2'].forEach((id) => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('click', () => simulateConnect(el, 'Wallet'));
+});
+
+['google-signin', 'google-signup'].forEach((id) => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('click', () => simulateConnect(el, 'Google account'));
+});
+
+document.getElementById('forgot-password').addEventListener('click', (e) => {
+  e.preventDefault();
+  alert('Password reset link would be sent to your registered email.');
+});
+
+/* -------------------------------------------------------------------------
+   7) LIVE TICKER MICRO-UPDATES (visual flavor — randomized drift)
+--------------------------------------------------------------------------*/
+(function initTicker() {
+  const chips = document.querySelectorAll('.ticker-chip');
+  if (!chips.length) return;
+
+  const state = {
+    BTC: { price: 64281, gain: 2.34 },
+    ETH: { price: 3412, gain: 1.12 },
+    SOL: { price: 168.9, gain: -0.68 }
+  };
+
+  function formatPrice(symbol, price) {
+    if (symbol === 'SOL') return `$${price.toFixed(2)}`;
+    return `$${Math.round(price).toLocaleString('en-US')}`;
+  }
+
+  setInterval(() => {
+    chips.forEach((chip) => {
+      const symbol = chip.getAttribute('data-symbol');
+      const s = state[symbol];
+      if (!s) return;
+
+      // small randomized drift
+      const delta = (Math.random() - 0.5) * (symbol === 'SOL' ? 0.8 : symbol === 'ETH' ? 6 : 60);
+      s.price = Math.max(0, s.price + delta);
+      s.gain += (Math.random() - 0.5) * 0.15;
+
+      const priceEl = chip.querySelector('.ticker-price');
+      const gainEl = chip.querySelector('.ticker-gain');
+
+      priceEl.textContent = formatPrice(symbol, s.price);
+      gainEl.textContent = `${s.gain >= 0 ? '+' : '−'}${Math.abs(s.gain).toFixed(2)}%`;
+      gainEl.classList.toggle('up', s.gain >= 0);
+      gainEl.classList.toggle('down', s.gain < 0);
+    });
+  }, 2800);
+})();
+
+</script>
+</body>
 </html>
