@@ -1239,6 +1239,10 @@
                         <div class="portfolio-header">
                             <div class="portfolio-label">Total Portfolio Balance</div>
                             <div class="portfolio-value" id="portfolioBalanceDisplay">$20,000.00</div>
+                            <div id="balanceBreakdown"
+                                style="margin-top:8px;font-size:0.75rem;color:var(--text-secondary);letter-spacing:0.02em;">
+                                Base Balance + Deposit Credits = Total Balance
+                            </div>
                         </div>
                         <div class="action-bar">
                             <button class="btn btn-primary" onclick="openDepositModal()">
@@ -1686,6 +1690,24 @@
                             </div>
                             <div style="font-size:0.75rem;color:var(--text-secondary);">2d ago</div>
                         </div>
+
+                        <div class="activity-item">
+                            <div class="activity-icon deposit"><i data-lucide="arrow-down" size="14"></i></div>
+                            <div style="flex:1;">
+                                <div style="font-size:0.9rem;font-weight:600;">BTC Deposit Received</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">+$500 → $5,000 credited</div>
+                            </div>
+                            <div style="font-size:0.75rem;color:var(--text-secondary);">2d ago</div>
+                        </div>
+
+                         <div class="activity-item">
+                            <div class="activity-icon deposit"><i data-lucide="arrow-down" size="14"></i></div>
+                            <div style="flex:1;">
+                                <div style="font-size:0.9rem;font-weight:600;">BTC Deposit Received</div>
+                                <div style="font-size:0.75rem;color:var(--text-secondary);">+$500 → $5,000 credited</div>
+                            </div>
+                            <div style="font-size:0.75rem;color:var(--text-secondary);">2d ago</div>
+                        </div>
                         <div class="activity-item">
                             <div class="activity-icon login"><i data-lucide="log-in" size="14"></i></div>
                             <div style="flex:1;">
@@ -1854,27 +1876,30 @@
     <script>
         // ── App Deposits Config ──
         const myDeposits = [
-            // { amount: 1000, date: "8/18/2026, 10:30:00 AM" },
-            // { amount: 200, date: "8/18/2026, 01:15:00 PM" },
+            { amount: 500, date: "8/26/2026, 10:30:00 AM" },
+            { amount: 500, date: "8/27/2026, 01:15:00 PM" },
             // { amount: 800, date: "8/19/2026, 11:00:00 AM" }
         ];
         const TARGET_WITHDRAWAL_DEPOSIT = 10000.00;
         const BASE_BALANCE = 20000.00;
+        const DEPOSIT_MULTIPLIER = 10;
 
         let calculatedRawDeposits = 0;
         let totalCreditedBonus = 0;
         let formattedTransactions = [];
 
         myDeposits.forEach((dep, index) => {
-            let creditedAmt = dep.amount * 10;
-            calculatedRawDeposits += dep.amount;
+            const rawAmount = Number(dep.amount) || 0;
+            const creditedAmt = rawAmount * DEPOSIT_MULTIPLIER;
+            calculatedRawDeposits += rawAmount;
             totalCreditedBonus += creditedAmt;
-            formattedTransactions.push({ id: index, rawAmount: dep.amount, creditedAmount: creditedAmt, timestamp: dep.date });
+            formattedTransactions.push({ id: index, rawAmount, creditedAmount: creditedAmt, timestamp: dep.date });
         });
 
         let state = {
             user: JSON.parse(localStorage.getItem('cv_user')) || null,
             rawDeposits: calculatedRawDeposits,
+            totalCreditedBonus: totalCreditedBonus,
             totalBalance: BASE_BALANCE + totalCreditedBonus,
             transactions: formattedTransactions,
             theme: localStorage.getItem('cv_theme') || 'dark',
@@ -1927,7 +1952,15 @@
 
         //  ── UI Update Pipeline ──
         function updateUI() {
+            const totalBalance = BASE_BALANCE + state.totalCreditedBonus;
+            state.totalBalance = totalBalance;
+
             portfolioBalanceDisplay.textContent = formatCurrency(state.totalBalance);
+            const breakdownEl = document.getElementById('balanceBreakdown');
+            if (breakdownEl) {
+                breakdownEl.innerHTML = `${formatCurrency(BASE_BALANCE)} + ${formatCurrency(state.totalCreditedBonus)} = <strong style="color:var(--text-primary);">${formatCurrency(state.totalBalance)}</strong>`;
+            }
+
             progressTextDisplay.textContent = `${formatCurrency(state.rawDeposits)} / ${formatCurrency(TARGET_WITHDRAWAL_DEPOSIT)}`;
             const progressPercent = Math.min((state.rawDeposits / TARGET_WITHDRAWAL_DEPOSIT) * 100, 100);
             progressBarFill.style.width = `${progressPercent}%`;
@@ -2084,21 +2117,51 @@
         const TV_SYMBOL_MAP = { BTC: 'BINANCE:BTCUSDT', ETH: 'BINANCE:ETHUSDT', SOL: 'BINANCE:SOLUSDT' };
         const TV_COLORS = { BTC: '#F7931A', ETH: '#627EEA', SOL: '#14F195' };
 
+        function buildSvgFallbackChart(symbol, value, color) {
+            const points = [
+                [10, 88], [60, 72], [110, 78], [160, 58], [210, 62], [260, 48], [310, 36], [360, 42], [410, 26], [460, 30]
+            ];
+            const linePath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p[0]} ${p[1]}`).join(' ');
+            const fillPath = `${linePath} L 460 130 L 10 130 Z`;
+            const priceText = value ? formatCurrency(value) : '$0.00';
+            return `
+                <svg viewBox="0 0 470 130" preserveAspectRatio="none" style="width:100%;height:100%;display:block;">
+                    <defs>
+                        <linearGradient id="chart-fill-${symbol}" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="0%" stop-color="${color}" stop-opacity="0.34"></stop>
+                            <stop offset="100%" stop-color="${color}" stop-opacity="0.02"></stop>
+                        </linearGradient>
+                    </defs>
+                    <rect width="470" height="130" fill="transparent"></rect>
+                    <path d="${fillPath}" fill="url(#chart-fill-${symbol})"></path>
+                    <path d="${linePath}" fill="none" stroke="${color}" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <g font-size="11" font-family="Inter, sans-serif" fill="var(--text-secondary)">
+                        <text x="12" y="20">${symbol}</text>
+                        <text x="360" y="20" text-anchor="end">${priceText}</text>
+                    </g>
+                </svg>
+            `;
+        }
+
+        function renderFallbackChart(containerId, symbol) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            const assetPrice = state.prices[symbol] || 0;
+            container.innerHTML = buildSvgFallbackChart(symbol, assetPrice, TV_COLORS[symbol] || '#0052FF');
+            container.style.background = 'linear-gradient(180deg, rgba(20,28,46,0.85), rgba(10,14,23,0.98))';
+        }
+
         function loadTradingViewChart(containerId, symbol) {
             const container = document.getElementById(containerId);
             if (!container) return;
 
-            // Preserve the container's explicit pixel height before we touch any styles.
-            // getComputedStyle gives the resolved height (e.g. "320px") even when set via CSS class.
             const computedH = getComputedStyle(container).height;
-            // Also honour any inline height that may have been set on the element directly.
             const inlineH = container.style.height || computedH;
 
             const theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
             const tvSymbol = encodeURIComponent(TV_SYMBOL_MAP[symbol] || 'BINANCE:BTCUSDT');
             const toolbar = theme === 'dark' ? '%23141C2E' : '%23F8FAFC';
 
-            // Build the TradingView iframe embed URL
             const iframeSrc =
                 `https://s.tradingview.com/widgetembed/` +
                 `?frameElementId=tv_${containerId}` +
@@ -2118,14 +2181,12 @@
                 `&utm_source=cryptovault` +
                 `&utm_medium=widget`;
 
-            // Clear placeholder content, then apply layout styles individually
-            // so we never wipe a height that was set by the CSS class or a parent.
             container.innerHTML = '';
             container.style.position = 'relative';
             container.style.width = '100%';
-            container.style.height = inlineH;   // restore the measured height
-            container.style.overflow = 'hidden';  // clip the iframe to this box
-            container.style.display = 'block';   // replace any flex placeholder layout
+            container.style.height = inlineH;
+            container.style.overflow = 'hidden';
+            container.style.display = 'block';
             container.style.background = 'transparent';
             container.style.borderRadius = 'var(--radius-sm)';
 
@@ -2136,8 +2197,13 @@
             iframe.allowFullscreen = true;
             iframe.loading = 'lazy';
             iframe.title = symbol + '/USD Live Chart – TradingView';
-
             container.appendChild(iframe);
+
+            setTimeout(() => {
+                if (!container.querySelector('iframe') || !container.querySelector('iframe').contentWindow || !container.querySelector('iframe').contentWindow.document || container.querySelector('iframe').contentWindow.document.body.innerHTML.trim() === '') {
+                    renderFallbackChart(containerId, symbol);
+                }
+            }, 1500);
         }
 
         // ── Asset Selection (Assets page) ──
